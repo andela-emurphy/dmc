@@ -6,6 +6,7 @@ import cors from 'cors';
 import db from './app/db/models/index';
 import routes from './app/routes';
 
+
 const app = Express();
 
 

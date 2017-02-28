@@ -1,6 +1,5 @@
 import gulp from 'gulp';
 import babel from 'gulp-babel';
-import sourcemaps from 'gulp-sourcemaps';
 import eslint from 'gulp-eslint';
 import mocha from 'gulp-mocha';
 import path from 'path';
@@ -21,12 +20,10 @@ gulp.task('lint', () => gulp.src(paths.eslint)
     .pipe(eslint.format()));
 
 gulp.task('babel:server', () => gulp.src(paths.server)
-    .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(gulp.dest(`${paths.es5}`)));
 
 gulp.task('babel:test', () => gulp.src(paths.test)
-    .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(gulp.dest(`${paths.sourceRoot}/test`)));
 
@@ -41,10 +38,10 @@ gulp.task('start', ['babel'], () => nodemon({
 gulp.task('babel', ['babel:test', 'babel:server']);
 
 gulp.task('watch', () => gulp
-  .watch(paths.es6, ['babel', 'test']));
+  .watch(paths.es5, ['babel', 'test']));
 
 gulp.task('test:server', ['babel'], () => gulp
-    .src('es5/test/server/**/*.js', { read: false })
+    .src('es5/test/server/**/*.js')
     .pipe(mocha({ reporter: 'nyan' })));
 
 gulp.task('test', ['test:server'], () => gulp

@@ -104,17 +104,7 @@ export default (sequelize, DataTypes) => {
         return _.pick(this, ['id', 'username',
           'firstname', 'lastname', 'email', 'role', 'Documents']);
       }
-    },
-    hooks: {
-      beforeValidate: ((user, option, callback) => {
-        user.email = user.email ? user.email.toLowerCase() : user.email;
-        user.firstname = user.email ? user.firstname.trim()
-          .toLowerCase() : null;
-        user.lastname = user.firstname ? user.lastname.trim()
-          .toLowerCase() : null;
-        callback(null, option);
-      })
-    },
+    }
   });
   return User;
 };

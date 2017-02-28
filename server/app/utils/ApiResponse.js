@@ -8,16 +8,13 @@ export default class Response {
    */
   constructor() {
     this.status = 200;
-
-    this.setStatus = this.setStatus.bind(this);
-    this.getStatus = this.setStatus.bind(this);
   }
   /**
    * Sets status code response
    * @param  {Number} status
    * @return {Object} object
    */
-  setStatus(status) {
+  static setStatus(status) {
     this.status = status;
     return this;
   }
@@ -26,7 +23,7 @@ export default class Response {
    * gets status code response
    * @return {Number} object
    */
-  getStatus() {
+  static getStatus() {
     return this.status;
   }
 
@@ -36,7 +33,7 @@ export default class Response {
    * @param  {Object} data - response data
    * @returns {Object}  response to be sent to client
    */
-  respond(res, data) {
+  static respond(res, data) {
     return res.status(this.getStatus())
       .json(data);
   }
@@ -48,7 +45,7 @@ export default class Response {
    * @param {String} message - message about response
    * @returns {Object}  response to be sent to client
    */
-  success(res, data = [], message = 'your request was successful') {
+  static success(res, data = [], message = null) {
     return this.setStatus(200)
       .respond(res, {
         status: true,
@@ -63,7 +60,7 @@ export default class Response {
    * @param {String} message - message about response
    * @returns {Object}  response to be sent to client
    */
-  notFound(res, message) {
+  static notFound(res, message) {
     return this.setStatus(404)
       .respond(res, {
         status: false,
@@ -77,7 +74,7 @@ export default class Response {
    * @param {String} message - message about response
    * @returns {Object}  response to be sent to client
    */
-  serverError(res, message) {
+  static serverError(res, message) {
     return this.setStatus(500)
       .respond(res, {
         status: false,
@@ -91,7 +88,7 @@ export default class Response {
    * @param {String} message - message about response
    * @returns {Object}  response to be sent to client
    */
-  badRequest(res, message) {
+  static badRequest(res, message) {
     return this.setStatus(400)
       .respond(res, {
         status: false,
@@ -105,7 +102,7 @@ export default class Response {
    * @param {String} message - message about response
    * @returns {Object}  response to be sent to client
    */
-  unAuthorize(res, message) {
+  static unAuthorize(res, message) {
     return this.setStatus(401)
       .respond(res, {
         status: false,
@@ -119,7 +116,7 @@ export default class Response {
    * @param {String} message - message about response
    * @returns {Object}  response to be sent to client
    */
-  forbidden(res, message) {
+  static forbidden(res, message) {
     return this.setStatus(403)
       .respond(res, {
         status: false,
@@ -135,7 +132,7 @@ export default class Response {
    * @param {String} message - message about response
    * @returns {Object}  response to be sent to client
    */
-  created(res, data, message = null) {
+  static created(res, data, message = null) {
     return this.setStatus(201)
       .respond(res, {
         status: true,
