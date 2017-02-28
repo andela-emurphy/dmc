@@ -48,7 +48,7 @@ export default class Response {
    * @param {String} message - message about response
    * @returns {Object}  response to be sent to client
    */
-  success(res, data = [], message = null) {
+  success(res, data = [], message = 'your request was successful') {
     return this.setStatus(200)
       .respond(res, {
         status: true,

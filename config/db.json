@@ -1,0 +1,22 @@
+{
+  "development": {
+    "username": null,
+    "password": null,
+    "database": "dcm",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": null,
+    "password": null,
+    "database": "dmc_test",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "url": "postgresql://localhost:5433/andela",
+    "dialect": "postgres"
+  }
+}

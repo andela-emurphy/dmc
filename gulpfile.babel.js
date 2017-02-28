@@ -23,13 +23,11 @@ gulp.task('lint', () => gulp.src(paths.eslint)
 gulp.task('babel:server', () => gulp.src(paths.server)
     .pipe(sourcemaps.init())
     .pipe(babel())
-    // .pipe(sourcemaps.write('.', { sourceRoot: paths.sourceRoot }))
     .pipe(gulp.dest(`${paths.es5}`)));
 
 gulp.task('babel:test', () => gulp.src(paths.test)
     .pipe(sourcemaps.init())
     .pipe(babel())
-    // .pipe(sourcemaps.write('.', { sourceRoot: paths.sourceRoot }))
     .pipe(gulp.dest(`${paths.sourceRoot}/test`)));
 
 gulp.task('start', ['babel'], () => nodemon({
