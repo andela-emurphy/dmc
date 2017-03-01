@@ -14,7 +14,7 @@ describe('User model', () => {
   before((done) => {
     db.Role.bulkCreate([
         { title: 'regular' },
-        { title: 'Admin' }
+        { title: 'admin' }
     ]).then(() => {
       db.User.bulkCreate([userData[1]]);
       done();

@@ -11,7 +11,7 @@ module.exports = {
       }], {});
     */
     return queryInterface.bulkInsert('Roles', [{
-      title: 'Admin',
+      title: 'admin',
       createdAt: new Date(),
       updatedAt: new Date()
     },

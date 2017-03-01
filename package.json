@@ -10,7 +10,7 @@
     "coverage": "cross-env NODE_ENV=test istanbul cover _mocha es5/test/**/**",
     "coveralls": "npm run coverage -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "lint": "node_modules/.bin/eslint app/** test/** ",
-    "seed": "node_modules/.bin/sequelize db:seed:all",
+    "seed": "npm run migrate && node_modules/.bin/sequelize db:seed:all",
     "seed:undo": "node_modules/.bin/sequelize db:seed:undo:all",
     "migrate": "node_modules/.bin/sequelize db:migrate",
     "migrate:undo": "node_modules/.bin/sequelize db:migrate:undo:all",

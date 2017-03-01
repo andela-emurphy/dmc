@@ -18,6 +18,8 @@ export default class AuthController {
 
  /**
   * Login user
+  * @description Log's in user with valid details
+  * and generates a jwt token for further authentication
   * @param  {Object} req - request object
   * @param  {Object} res - response object
   * @returns {Object}  response to be sent to client
@@ -52,7 +54,9 @@ export default class AuthController {
   }
 
 /**
-  * Logs user out
+  * Logout
+  * @description Logs user out from api
+  * by blocking continues use of jwt
   * @param  {Object} req - request object
   * @param  {Object} res - response object
   * @returns {Object}  response to be sent to client
