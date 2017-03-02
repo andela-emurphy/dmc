@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node es5/server.js",
     "production": "node_modules/.bin/gulp babel && npm start",
-    "babel-node": "node_modules/.bin/babel-node  server.js",
+    "babel-node": "nodemon --exec node_modules/.bin/babel-node  server/server.js",
     "build": "babel server.js -d src",
     "coverage": "cross-env NODE_ENV=test istanbul cover _mocha es5/test/**/**",
     "coveralls": "npm run coverage -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
@@ -15,7 +15,7 @@
     "seed:undo": "node_modules/.bin/sequelize db:seed:undo:all",
     "migrate": "node_modules/.bin/sequelize db:migrate",
     "migrate:undo": "node_modules/.bin/sequelize db:migrate:undo:all",
-    "test": "gulp babel && cross-env NODE_ENV=prodcution npm run test:dev",
+    "test": "gulp babel && cross-env NODE_ENV=test npm run test:dev",
     "test:dev": "npm run migrate && npm run coverage"
   },
   "nyc": {

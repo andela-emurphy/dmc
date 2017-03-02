@@ -4,7 +4,7 @@ import Response from '../utils/ApiResponse';
 const Role = db.Role;
 
 /**
- * @description controller for
+ * @description
  * managing role endpoint
  * @class
  */
@@ -26,7 +26,8 @@ class UserController {
   }
 
   /**
-  * Gets all roles
+  * Get all roles
+  * @description gets all roles
   * @param {Object} req
   * @param {Object} res
   * @return {Object} res
@@ -41,7 +42,6 @@ class UserController {
         }
       };
     }
-
     search.limit = parseInt(search.limit || 10, 10);
     query.limit = (!search.limit || search.limit > 10) ? 10 : search.limit;
     query.offset = search.offset ? search.offset : 0;
@@ -54,7 +54,7 @@ class UserController {
   }
 
  /**
-  * Get
+  * Get a role
   * @description gets a single role
   * @param {Object} req
   * @param {Object} res

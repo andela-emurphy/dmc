@@ -402,7 +402,7 @@ describe('Document controller', () => {
           res.should.has.status(403);
           res.body.should.have.property('status').to.eql(false);
           res.body.message.should
-            .eql('Forbidden! this document is private');
+            .eql('Forbidden! you can\'t delete this document');
           done();
         });
     });

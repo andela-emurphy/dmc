@@ -54,7 +54,7 @@ export default class AuthController {
 
 /**
   * Logout
-  * @description Logs user out from api
+  * @description Logs user out from the api
   * by blocking continues use of jwt
   * @param  {Object} req - request object
   * @param  {Object} res - response object

@@ -11,14 +11,16 @@ export default class DocumentController extends Response {
 
   /**
    * Gets all document
+   * @description gets all documents
+   * Takes a query limit and sets number
+   * document to return, offset number of
+   * doc to skip and query for word to find.
    * @param {Object} req
    * @param {Object} res
-   * @return {Object} res
+   * @return {Object} response
    */
   static getAll(req, res) {
-    const search = req.query;
-    const query = Access.docQuery(req, search);
-
+    const query = Access.docQuery(req);
     Document.findAndCountAll(query)
       .then((data) => {
         data.next = Math.floor(data.count / query.limit) || 1;
@@ -30,9 +32,12 @@ export default class DocumentController extends Response {
 
   /**
    * Gets a single document
+   * @description returns a single document
+   * base on the the owner, admin access, and
+   * if the document is public
    * @param {Object} req
    * @param {Object} res
-   * @return {Object} res
+   * @return {Object} response
    */
   static get(req, res) {
     const documentId = req.params.id;
@@ -51,10 +56,12 @@ export default class DocumentController extends Response {
 
 
   /**
-   * Gets a single document
+   * Create a  document
+   * @description creates a new document
+   * assigns that document to the creator
    * @param {Object} req
    * @param {Object} res
-   * @return {Object} res
+   * @return {Object} response
    */
   static create(req, res) {
     const body = req.body;
@@ -65,7 +72,10 @@ export default class DocumentController extends Response {
   }
 
   /**
-   * Gets a single document
+   * Updates a document
+   * @description Updates a document base
+   * on the type of document and access
+   * the user has.
    * @param {Object} req
    * @param {Object} res
    * @return {Object} res
@@ -90,7 +100,9 @@ export default class DocumentController extends Response {
   }
 
   /**
-   * Gets a single document
+   * Delete a single document
+   * deletes a document base on
+   * the access level of the user
    * @param {Object} req
    * @param {Object} res
    * @return {Object} res

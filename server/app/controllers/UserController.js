@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import db from '../db/models/index';
 import Response from '../utils/ApiResponse';
+import Access from '../utils/Access';
 
 const User = db.User;
 
@@ -33,24 +34,7 @@ class UserController {
   * @return {Object} res
   */
   static getAll(req, res) {
-    const search = req.query;
-    let query = {};
-    if (req.query.q) {
-      query = {
-        where: {
-          $or: [
-              { firstname: { $ilike: `%${req.query.q}%` } },
-              { lastname: { $ilike: `%${req.query.q}%` } },
-              { username: { $ilike: `%${req.query.q}%` } }
-          ]
-        }
-      };
-    }
-    search.limit = parseInt(search.limit || 10, 10);
-    query.limit = (!search.limit || search.limit > 10) ? 10 : search.limit;
-    query.offset = search.offset ? search.offset : 0;
-    query.attributes = ['id', 'username',
-      'firstname', 'lastname', 'email', 'role'];
+    const query = Access.userQuery(req);
     User.findAndCountAll(query)
     .then((data) => {
       data.next = Math.floor(data.count / query.limit) || data.count;
