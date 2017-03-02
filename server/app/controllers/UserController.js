@@ -35,9 +35,6 @@ class UserController {
   static getAll(req, res) {
     const search = req.query;
     let query = {};
-    query.limit = search.limit ? search.limit : 10;
-    query.offset = search.offset ? search.offset : 1;
-
     if (req.query.q) {
       query = {
         where: {
@@ -49,7 +46,12 @@ class UserController {
         }
       };
     }
-    query.attributes = ['id', 'username', 'firstname', 'lastname', 'email', 'role'];
+
+    search.limit = parseInt(search.limit || 10, 10);
+    query.limit = (!search.limit || search.limit > 10) ? 10 : search.limit;
+    query.offset = search.offset ? search.offset : 1;
+    query.attributes = ['id', 'username',
+      'firstname', 'lastname', 'email', 'role'];
     User.findAndCountAll(query, {})
     .then((data) => {
       data.next = Math.floor(data.count / query.limit) || data.count;
@@ -84,9 +86,9 @@ class UserController {
   * @return {Object} res
   */
   static update(req, res) {
-    const body = _.pick(req.body, ['firstname', 'lastname', 'email', 'password', 'username']);
+    const body = _.pick(req.body, ['firstname', 'lastname',
+      'email', 'password', 'username']);
     const userId = req.user.sub;
-    console.log(req.body);
     User.findById(userId)
       .then((user) => {
         if (!user) {

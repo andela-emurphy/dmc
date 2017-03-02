@@ -117,7 +117,7 @@ describe('User controller', () => {
           res.body.data.should.have.property('lastname').eql('murphy');
           res.body.data.should.have.property('email').eql('test@test.com');
           done();
-      });
+        });
     });
 
     it('should return 403 if details does not belong to user', (done) => {
@@ -163,7 +163,6 @@ describe('User controller', () => {
       .get('/users')
       .set('Authorization', `Bearer ${adminToken}`)
       .end((err, res) => {
-        console.log(res.body.data.rows)
         res.should.have.status(200);
         res.body.data.should.be.a('object');
         res.body.data.should.have.property('count');
@@ -193,7 +192,8 @@ describe('User controller', () => {
         res.body.data.rows[0].should.have.property('id').eql(1);
         res.body.data.rows[0].should.have.property('firstname').eql('uncle');
         res.body.data.rows[0].should.have.property('lastname').eql('uncle');
-        res.body.data.rows[0].should.have.property('email').eql('admin@test.com');
+        res.body.data.rows[0].should.have
+          .property('email').eql('admin@test.com');
         res.body.data.rows[0].should.have.property('role').eql('admin');
         done();
       });
@@ -205,7 +205,6 @@ describe('User controller', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .query({ limit: 3, offset: 3 })
       .end((err, res) => {
-        console.log(res.body)
         res.should.have.status(200);
         res.body.data.should.be.a('object');
         res.body.data.should.have.property('count').eql(4);
@@ -215,7 +214,8 @@ describe('User controller', () => {
         res.body.data.rows[0].should.have.property('id').eql(55);
         res.body.data.rows[0].should.have.property('firstname').eql('enaho');
         res.body.data.rows[0].should.have.property('lastname').eql('murphy');
-        res.body.data.rows[0].should.have.property('email').eql('test@test.com');
+        res.body.data.rows[0].should.have
+          .property('email').eql('test@test.com');
         done();
       });
     });
@@ -225,7 +225,6 @@ describe('User controller', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .query({ q: 'murphy' })
       .end((err, res) => {
-        console.log(res.body.data.rows[0])
         res.should.have.status(200);
         res.body.data.should.be.a('object');
         res.body.data.should.have.property('count').eql(3);
@@ -235,7 +234,8 @@ describe('User controller', () => {
         res.body.data.rows[0].should.have.property('id').eql(400);
         res.body.data.rows[0].should.have.property('firstname').eql('enaho');
         res.body.data.rows[0].should.have.property('lastname').eql('murphy');
-        res.body.data.rows[0].should.have.property('email').eql('mimi@test.com');
+        res.body.data.rows[0].should.have
+          .property('email').eql('mimi@test.com');
         res.body.data.rows[0].should.have.property('role').eql('regular');
         done();
       });
@@ -350,8 +350,9 @@ describe('User controller', () => {
             done();
           });
     });
-    it('should return a 403 if user tries to delete his/her account', (done) => {
-      chai.request(app)
+    it('should return a 403 if user tries to delete his/her account',
+      (done) => {
+        chai.request(app)
           .delete('/users/780')
             .set('Authorization', `Bearer ${deleteToken}`)
             .end((err, res) => {
@@ -360,7 +361,7 @@ describe('User controller', () => {
                 .eql('Forbidden! you cannot access this route');
               done();
             });
-    });
+      });
 
     it('should return a 401 for none Authenticated users', (done) => {
       const fakeToken = 'this.is.a.fake.token';

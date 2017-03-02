@@ -2,6 +2,7 @@ import AuthController from './controllers/AuthController';
 import UserController from './controllers/UserController';
 import AuthMiddleware from '../middleware/Auth';
 import { userPermission, adminPermission } from '../middleware/Permission';
+import DocumentController from '../app/controllers/DocumentController';
 
 export default (express, app) => {
   const Router = express.Router();
@@ -16,9 +17,15 @@ export default (express, app) => {
   Router.get('/users/:id', userPermission, UserController.get);
   Router.put('/users/:id', userPermission, UserController.update);
   Router.delete('/users/:id', adminPermission, UserController.delete);
-  Router.get('/users/:id/documents', userPermission, UserController.getUserDocuments);
+  Router.get('/users/:id/documents', userPermission,
+    UserController.getUserDocuments);
 
-
+   // manage documents
+  Router.post('/documents', DocumentController.create);
+  Router.get('/documents', DocumentController.getAll);
+  Router.get('/documents/:id', DocumentController.get);
+  Router.put('/documents/:id', DocumentController.update);
+  Router.delete('/documents/:id', DocumentController.delete);
 
   app.use('/', AuthMiddleware, Router);
 };

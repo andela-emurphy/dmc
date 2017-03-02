@@ -8,11 +8,8 @@ export const adminPermission = (req, res, next) => {
   }
 };
 
-
-
 export const userPermission = (req, res, next) => {
   const userId = parseInt(req.params.id, 10);
-  console.log(userId, req.user.sub);
   if (req.user.role === 'admin' || req.user.sub === userId) {
     next();
   } else {
