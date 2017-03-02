@@ -14,7 +14,7 @@ describe('Authentication Middleware', () => {
   before((done) => {
     db.Role.bulkCreate([
         { title: 'regular' },
-        { title: 'Admin' }
+        { title: 'admin' }
     ], { validate: true }).then(() => {
       db.User.bulkCreate(userData, { validate: true })
       .then(() => {

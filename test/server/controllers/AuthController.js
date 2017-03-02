@@ -9,11 +9,11 @@ chai.use(chaiHttp);
 chai.should();
 
 
-describe('User controller', () => {
+describe('Authentication controller', () => {
   before((done) => {
     db.Role.bulkCreate([
       { title: 'regular' },
-      { title: 'Admin' }
+      { title: 'admin' }
     ], { validate: true }).then(() => {
       db.User.bulkCreate(userData, { validate: true });
       done();
@@ -37,7 +37,7 @@ describe('User controller', () => {
           res.body.should.have.property('message');
           res.body.data.should.have.property('username').eql('dadmin');
           res.body.data.should.have.property('firstname').eql('uncle');
-          res.body.data.should.have.property('lastname').eql('chidi');
+          res.body.data.should.have.property('lastname').eql('uncle');
           res.body.data.should.have.property('email').eql('admin@test.com');
           res.body.data.should.have.property('token');
           done();

@@ -6,22 +6,29 @@ module.exports = {
     /*
       Add altering commands here.
       Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.bulkInsert('Person', [{
-        name: 'John Doe',
-        isBetaMember: false
-      }], {});
     */
-
-    return queryInterface.bulkInsert('Users', [{
+    const arr = [];
+    for (let index = 4; index < 20; index += 1) {
+      arr.push(index);
+    }
+    const users = [...arr.map(num => ({
+      id: num,
+      username: Faker.Internet.userName(),
+      firstname: Faker.Name.lastName(),
+      lastname: Faker.Name.firstName(),
+      email: Faker.Internet.email(),
+      password: bcrypt.hashSync('andela'),
+      role: 'regular',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    })), ...[{
       id: 1,
       username: 'enahomurphy',
       firstname: 'Enaho',
       lastname: 'Murphy',
       email: 'enahomurphy@gmail.com',
       password: bcrypt.hashSync('andela'),
-      role: 'Admin',
+      role: 'admin',
       createdAt: new Date(),
       updatedAt: new Date()
     },
@@ -38,17 +45,17 @@ module.exports = {
     },
     {
       id: 3,
-      username: Faker.Internet.userName(),
-      firstname: Faker.Name.firstName(),
-      lastname: Faker.Name.lastName(),
-      email: Faker.Internet.email(),
+      username: 'saitama',
+      firstname: 'sama',
+      lastname: 'goku',
+      email: 'goku@gmail.com',
       password: bcrypt.hashSync('1234567'),
       role: 'regular',
       createdAt: new Date(),
       updatedAt: new Date()
-    }], {
-      // validate: false
-    });
+    }]];
+
+    return queryInterface.bulkInsert('Users', users);
   },
 
   down(queryInterface) {

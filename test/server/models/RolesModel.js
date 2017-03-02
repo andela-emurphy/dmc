@@ -13,7 +13,7 @@ describe('Role  model', () => {
   before((done) => {
     db.Role.bulkCreate([
         { title: 'regular' },
-        { title: 'Admin' }
+        { title: 'admin' }
     ]).then(() => {
       done();
     });

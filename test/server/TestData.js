@@ -61,11 +61,11 @@ export const userData = [{
 {
   id: 1,
   firstname: 'uncle',
-  lastname: 'chidi',
+  lastname: 'uncle',
   username: 'dadmin',
   email: 'admin@test.com',
   password: '12345678',
-  role: 'Admin'
+  role: 'admin'
 },
 {
   id: 401,
