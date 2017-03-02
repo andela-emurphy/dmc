@@ -37,7 +37,6 @@ export default class AuthController {
       if (!user || !user.isPassword(body.password)) {
         return Response.badRequest(res, message);
       }
-
       const token = jwt.sign({
         sub: user.id,
         role: user.role,

@@ -9,7 +9,7 @@ chai.use(chaiHttp);
 chai.should();
 
 
-describe('User controller', () => {
+describe('Authentication controller', () => {
   before((done) => {
     db.Role.bulkCreate([
       { title: 'regular' },

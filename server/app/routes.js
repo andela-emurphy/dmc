@@ -3,6 +3,7 @@ import UserController from './controllers/UserController';
 import AuthMiddleware from '../middleware/Auth';
 import { userPermission, adminPermission } from '../middleware/Permission';
 import DocumentController from '../app/controllers/DocumentController';
+import RoleController from '../app/controllers/RoleController';
 
 export default (express, app) => {
   const Router = express.Router();
@@ -27,5 +28,15 @@ export default (express, app) => {
   Router.put('/documents/:id', DocumentController.update);
   Router.delete('/documents/:id', DocumentController.delete);
 
+  // mange roles
+  Router.post('/roles', adminPermission, RoleController.create);
+  Router.get('/roles', adminPermission, RoleController.getAll);
+  Router.get('/roles/:title', userPermission, RoleController.get);
+  Router.get('/roles/title', userPermission,
+    UserController.getUserDocuments);
+
+  app.get('/', (req, res) => {
+    res.send('Welcome to the ultimate document manager');
+  });
   app.use('/', AuthMiddleware, Router);
 };

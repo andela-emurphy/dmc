@@ -21,8 +21,7 @@ export default class DocumentController extends Response {
 
     Document.findAndCountAll(query)
       .then((data) => {
-        data.next = Math.floor(data.count / query.limit) || data.count;
-        data.max = 10;
+        data.next = Math.floor(data.count / query.limit) || 1;
         Response.success(res, data, 'query successful');
       })
       .catch(err => Response.serverError(res, err.message));

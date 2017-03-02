@@ -9,43 +9,6 @@ import _ from 'underscore';
 class Access {
 
   /**
-  * isAdmin
-  * @description checks if user making that
-  * request is an admin
-  * @param  {Object} req - request object
-  * @returns {Promise}  returns a promise
-  */
-  static isAdmin(req) {
-    return new Promise((resolve, reject) => {
-      if (req.user.role === 'admin') {
-        return resolve(req.user);
-      }
-      return reject({
-        message: 'Unauthorized! only admins can access this route'
-      });
-    });
-  }
-
-  /**
-  * hasPermission
-  * @description checks if user making that
-  * request is an admin
-  * @param  {Object} req - request object
-  * @returns {Promise}  returns a promise
-  */
-  static hasPermission(req, message) {
-    return new Promise((resolve, reject) => {
-      const userId = parseInt(req.params.id, 10);
-      if (req.user.role === 'admin' || req.user.sub === userId) {
-        return resolve(req);
-      }
-      return reject({
-        message: message || 'Forbidden! you cannot access this resource'
-      });
-    });
-  }
-
-  /**
   * isPublic
   * @description checks if user making that
   * request is an admin
@@ -80,6 +43,8 @@ class Access {
       });
     });
   }
+
+
   /**
   * isPublic
   * @description checks if user making that
@@ -89,26 +54,24 @@ class Access {
   * @returns {Promise}  returns a promise
   */
   static docQuery(req, search) {
-    let query = {};
-    if (req.user.role !== 'admin') {
-      query = {
-        where: {
-          $or: [
-            { ownerId: req.user.sub },
-            { public: 1 },
-          ]
-        }
-      };
-    }
+    const query = {};
+    query.where = { $or: [] };
     if (search.q) {
       query.where.$or.push(
-          { title: { $ilike: `%${req.query.q}%` } },
-          { content: { $ilike: `%${req.query.q}%` } }
-        );
+        { title: { $ilike: `%${req.query.q}%` } },
+        { content: { $ilike: `%${req.query.q}%` } }
+      );
     }
+    if (req.user.role !== 'admin') {
+      query.where.$or.push({ ownerId: req.user.sub }, { public: 1 });
+    }
+    if (req.user.role === 'admin' && !search.q) {
+      query.where = {};
+    }
+
     search.limit = parseInt(search.limit || 10, 10);
     query.limit = (!search.limit || search.limit > 10) ? 10 : search.limit;
-    query.offset = search.offset ? search.offset : 1;
+    query.offset = search.offset ? search.offset : 0;
 
     return query;
   }

@@ -46,13 +46,12 @@ class UserController {
         }
       };
     }
-
     search.limit = parseInt(search.limit || 10, 10);
     query.limit = (!search.limit || search.limit > 10) ? 10 : search.limit;
-    query.offset = search.offset ? search.offset : 1;
+    query.offset = search.offset ? search.offset : 0;
     query.attributes = ['id', 'username',
       'firstname', 'lastname', 'email', 'role'];
-    User.findAndCountAll(query, {})
+    User.findAndCountAll(query)
     .then((data) => {
       data.next = Math.floor(data.count / query.limit) || data.count;
       Response.success(res, data, 'query successful');
@@ -94,7 +93,7 @@ class UserController {
         if (!user) {
           return Response.notFound(res, 'User not found.');
         }
-        if (req.user.role === 'admin') {
+        if (req.user.role === 'admin' && req.user.sub !== 1) {
           body.role = req.body.role || user.role;
         }
         user.update(body)

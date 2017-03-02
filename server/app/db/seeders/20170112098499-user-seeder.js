@@ -6,12 +6,6 @@ module.exports = {
     /*
       Add altering commands here.
       Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.bulkInsert('Person', [{
-        name: 'John Doe',
-        isBetaMember: false
-      }], {});
     */
     const arr = [];
     for (let index = 4; index < 20; index += 1) {
