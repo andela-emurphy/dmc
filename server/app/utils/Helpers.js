@@ -53,5 +53,23 @@ class Access {
       }
     });
   }
+
+  /**
+   * Pagination
+   * @param {Object} count data count
+   * @param {Object} query user query
+   * @returns {Object} return an object
+   */
+  static pagination(count, query) {
+    const next = Math.ceil(count / query.limit);
+    const currentPage = Math.floor((query.offset / query.limit) + 1);
+    return {
+      next_offset: parseInt(query.limit + query.offset, 10),
+      page_count: next,
+      Page: currentPage,
+      page_size: query.limit,
+      total_count: count
+    };
+  }
 }
 export default Access;

@@ -2,6 +2,7 @@ import _ from 'underscore';
 import db from '../db/models/index';
 import Response from '../utils/ApiResponse';
 import Query from '../utils/Query';
+import Helpers from '../utils/Helpers';
 
 const User = db.User;
 
@@ -39,9 +40,7 @@ class UserController {
     const query = Query.userQuery(req);
     User.findAndCountAll(query)
     .then((data) => {
-      const count = Math.floor(data.count / query.limit);
-      const l = count - query.offset;
-      data.next = l;
+      data.pagination = Helpers.pagination(data.count, query);
       Response.success(res, data, 'query successful');
     })
     .catch(err => Response.serverError(res, err.message));

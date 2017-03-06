@@ -1,7 +1,7 @@
 import db from '../db/models/index';
 import Response from '../utils/ApiResponse';
 import Query from '../utils/Query';
-import Access from '../utils/Access';
+import Helpers from '../utils/Helpers';
 
 const Document = db.Document;
 
@@ -24,7 +24,7 @@ export default class DocumentController extends Response {
     const query = Query.docQuery(req);
     Document.findAndCountAll(query)
       .then((data) => {
-        data.next = Math.floor(data.count / query.limit) || 1;
+        data.pagination = Helpers.pagination(data.count, query);
         Response.success(res, data, 'query successful');
       })
       .catch(err => Response.serverError(res, err.message));
@@ -42,7 +42,7 @@ export default class DocumentController extends Response {
    * @return {Object} response
    */
   static get(req, res) {
-    Access.docAccess(req, req.doc, 'public')
+    Helpers.docAccess(req, req.doc, 'public')
       .then(() => Response.success(res, req.doc, 'document found'))
       .catch(err => Response.unAuthorize(res, err.message));
   }
@@ -76,7 +76,7 @@ export default class DocumentController extends Response {
    * @return {Object} response
    */
   static update(req, res) {
-    Access.docAccess(req, req.doc, 'editable',
+    Helpers.docAccess(req, req.doc, 'editable',
     'Forbidden, you cannot edit this document')
       .then((request) => {
         req.doc.update(request.body)
@@ -96,7 +96,7 @@ export default class DocumentController extends Response {
    * @return {Object} response
    */
   static delete(req, res) {
-    Access.docAccess(req, req.doc, 'delete')
+    Helpers.docAccess(req, req.doc, 'delete')
     .then(() => {
       req.doc.destroy()
       .then(() => Response.success(res, req.doc, 'Document deleted'));

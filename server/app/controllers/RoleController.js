@@ -1,6 +1,7 @@
 import db from '../db/models/index';
 import Response from '../utils/ApiResponse';
 import Query from '../utils/Query';
+import Helpers from '../utils/Helpers';
 
 const Role = db.Role;
 
@@ -39,7 +40,7 @@ class UserController {
     const query = Query.roleQuery(req);
     Role.findAndCountAll(query)
     .then((data) => {
-      data.next = Math.floor(data.count / query.limit) || data.count;
+      data.pagination = Helpers.pagination(data.count, query);
       Response.success(res, data, 'query successful');
     })
     .catch(err => Response.serverError(res, err.message));
