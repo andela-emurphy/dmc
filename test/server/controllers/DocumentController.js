@@ -141,7 +141,7 @@ describe('Document controller', () => {
           res.body.data.rows.should.have.lengthOf(5);
           done();
         });
-    });
+      });
   });
 
   describe('Get single document', () => {

@@ -76,7 +76,7 @@ class Query {
     const searchQuery = [{ title: { $ilike: `%${req.query.search}%` } },
         { content: { $ilike: `%${req.query.search}%` } }];
     if (role === 'admin') {
-      query.where = {};
+      query.where = search.search ? { $or: searchQuery } : {};
     } else {
       query.where = {
         $or: [
@@ -85,20 +85,8 @@ class Query {
         ]
       };
     }
-    if (search.search) {
-      role !== 'admin' ? query.where.$or.push(searchQuery)
-        : query.where = { $or: searchQuery };
-    }
-
-
-    if (search.q) {
-      query.where.$or.push(
-        { title: { $ilike: `%${req.query.search}%` } },
-        { content: { $ilike: `%${req.query.search}%` } }
-      );
-    }
-    if (req.user.role !== 'admin') {
-      query.where.$or.push({ ownerId: req.user.sub }, { public: 1 });
+    if (search.search && role !== 'admin') {
+      query.where.$or.push(searchQuery);
     }
     search.limit = parseInt(search.limit || 10, 10);
     query.limit = (!search.limit || search.limit > 10) ? 10 : search.limit;
