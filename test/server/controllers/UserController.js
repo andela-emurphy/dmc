@@ -67,7 +67,7 @@ describe('User controller', () => {
         });
     });
 
-    it('should not POST a user without required fields', (done) => {
+    it('should not create a user without required fields', (done) => {
       chai.request(app)
         .post('/users')
         .send({
@@ -131,6 +131,7 @@ describe('User controller', () => {
         done();
       });
     });
+
     it('should return 404 if user does not exit', (done) => {
       chai.request(app)
       .get('/users/55555')
@@ -145,7 +146,7 @@ describe('User controller', () => {
   });
 
   describe('Get all Users', () => {
-    it('should return a 403 for none admin users', (done) => {
+    it('should return a 403 for none admin user', (done) => {
       chai.request(app)
       .get('/users')
       .set('Authorization', `Bearer ${token}`)
@@ -173,7 +174,7 @@ describe('User controller', () => {
       });
     });
 
-    it('should return two users for limit 2', (done) => {
+    it('should return two users for query limit 2', (done) => {
       chai.request(app)
       .get('/users')
       .set('Authorization', `Bearer ${adminToken}`)
@@ -205,11 +206,11 @@ describe('User controller', () => {
       });
     });
 
-    it('should return three users for user query', (done) => {
+    it('should return three users for user query search murphy', (done) => {
       chai.request(app)
       .get('/users')
       .set('Authorization', `Bearer ${adminToken}`)
-      .query({ q: 'murphy' })
+      .query({ search: 'murphy' })
       .end((err, res) => {
         res.should.have.status(200);
         res.body.data.should.be.a('object');
@@ -222,7 +223,7 @@ describe('User controller', () => {
     });
   });
 
-  describe('Update a User', () => {
+  describe('Update User', () => {
     it('should return a 401 for none Authenticated users', (done) => {
       const fakeToken = 'this.is.a.fake.token';
       chai.request(app)
@@ -252,9 +253,24 @@ describe('User controller', () => {
       });
     });
 
-    it('should return 403 a regular user tries to update another user account',
-      (done) => {
-        chai.request(app)
+    it('should return 200 if admin tries to update any account', (done) => {
+      chai.request(app)
+      .put('/users/401')
+      .send({
+        username: 'jabless',
+        lastname: 'micheal'
+      })
+      .set('Authorization', `Bearer ${adminToken}`)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.have.property('message').eql('user updated');
+        done();
+      });
+    });
+
+    it(`should return 403 if a regular user tries 
+      to update another user account`, (done) => {
+      chai.request(app)
         .put('/users/401')
         .send({
           firstname: 'joel',
@@ -267,10 +283,10 @@ describe('User controller', () => {
             .eql('Forbidden! you cannot access this route');
           done();
         });
-      });
+    });
   });
 
-  describe('Deletes a User', () => {
+  describe('Delete User', () => {
     let deleteToken = null;
     beforeEach((done) => {
       db.User.create({
@@ -280,7 +296,6 @@ describe('User controller', () => {
         email: 'the@the.com',
         password: 'goldetulip',
         username: 'orochimaru',
-        role: 'regular'
       })
       .then(() => {
         chai.request(app)
@@ -330,6 +345,19 @@ describe('User controller', () => {
             done();
           });
     });
+
+    it('should return 403 if an admin tries to delete his account', (done) => {
+      chai.request(app)
+          .delete('/users/1')
+          .set('Authorization', `Bearer ${adminToken}`)
+          .end((err, res) => {
+            res.should.have.status(403);
+            res.body.should.have.property('message')
+              .eql('Forbidden! super admin cannot be deleted');
+            done();
+          });
+    });
+
     it('should return a 403 if user tries to delete his/her account',
       (done) => {
         chai.request(app)

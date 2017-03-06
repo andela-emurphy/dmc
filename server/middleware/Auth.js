@@ -6,8 +6,19 @@ import Response from '../app/utils/ApiResponse';
 
 dotenv.config();
 
+// secrete key
 const secret = process.env.SECRET_KEY;
 
+
+  /**
+   * Authentication middleware
+   * @description authorizes and authenticate users
+   * checks if their token sent is valid or has not expired
+   * @param  {Object} req - request object
+   * @param  {Object} res - response object
+   * @param {String}  next - callback if authentication is a success
+   * @returns {Object}  response to be sent to client
+   */
 export default (req, res, next) => {
   let payload;
   const authToken = req.get('Authorization') || '';

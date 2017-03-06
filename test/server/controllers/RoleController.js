@@ -118,7 +118,7 @@ describe('Role controller', () => {
       });
     });
 
-    it('should return a role', (done) => {
+    it('should return a role admin', (done) => {
       chai.request(app)
         .get('/roles/admin')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -189,11 +189,12 @@ describe('Role controller', () => {
         done();
       });
     });
-    it('should return one role for query any param', (done) => {
+
+    it('should return one role for any query param', (done) => {
       chai.request(app)
       .get('/roles')
       .set('Authorization', `Bearer ${adminToken}`)
-      .query({ q: 'admin' })
+      .query({ search: 'admin' })
       .end((err, res) => {
         res.should.have.status(200);
         res.body.data.should.be.a('object');

@@ -1,5 +1,6 @@
 import db from '../db/models/index';
 import Response from '../utils/ApiResponse';
+import Query from '../utils/Query';
 
 const Role = db.Role;
 
@@ -27,24 +28,15 @@ class UserController {
 
   /**
   * Get all roles
-  * @description gets all roles
+  * @description gets all roles when GET /roles
+  * endpoint is called. returned data can be further
+  * streamlined by passing query params.
   * @param {Object} req
   * @param {Object} res
   * @return {Object} res
   */
   static getAll(req, res) {
-    const search = req.query;
-    let query = {};
-    if (req.query.q) {
-      query = {
-        where: {
-          title: { $ilike: `%${search.q}%` }
-        }
-      };
-    }
-    search.limit = parseInt(search.limit || 10, 10);
-    query.limit = (!search.limit || search.limit > 10) ? 10 : search.limit;
-    query.offset = search.offset ? search.offset : 0;
+    const query = Query.roleQuery(req);
     Role.findAndCountAll(query)
     .then((data) => {
       data.next = Math.floor(data.count / query.limit) || data.count;
@@ -55,10 +47,11 @@ class UserController {
 
  /**
   * Get a role
-  * @description gets a single role
+  * @description gets a single user when GET /roles/:title
+  * endpoint is called.
   * @param {Object} req
   * @param {Object} res
-  * @return {Object} res
+  * @return {Object} return
   */
   static get(req, res) {
     const title = req.params.title;

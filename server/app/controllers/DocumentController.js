@@ -1,5 +1,6 @@
 import db from '../db/models/index';
 import Response from '../utils/ApiResponse';
+import Query from '../utils/Query';
 import Access from '../utils/Access';
 
 const Document = db.Document;
@@ -20,7 +21,7 @@ export default class DocumentController extends Response {
    * @return {Object} response
    */
   static getAll(req, res) {
-    const query = Access.docQuery(req);
+    const query = Query.docQuery(req);
     Document.findAndCountAll(query)
       .then((data) => {
         data.next = Math.floor(data.count / query.limit) || 1;
@@ -33,6 +34,7 @@ export default class DocumentController extends Response {
   /**
    * Gets a single document
    * @description returns a single document
+   * when GET /documents is called
    * base on the the owner, admin access, and
    * if the document is public
    * @param {Object} req
@@ -40,24 +42,16 @@ export default class DocumentController extends Response {
    * @return {Object} response
    */
   static get(req, res) {
-    const documentId = req.params.id;
-    Document.findById(documentId)
-      .then((document) => {
-        if (!document) {
-          return Response
-            .notFound(res, `Document with id ${documentId} not found`);
-        }
-        Access.docAccess(req, document, 'public')
-          .then(() => Response.success(res, document, 'document found'))
-          .catch(err => Response.unAuthorize(res, err.message));
-      })
-      .catch(err => Response.serverError(res, err.message));
+    Access.docAccess(req, req.doc, 'public')
+      .then(() => Response.success(res, req.doc, 'document found'))
+      .catch(err => Response.unAuthorize(res, err.message));
   }
 
 
   /**
    * Create a  document
    * @description creates a new document
+   * when POST /documents is called
    * assigns that document to the creator
    * @param {Object} req
    * @param {Object} res
@@ -76,50 +70,36 @@ export default class DocumentController extends Response {
    * @description Updates a document base
    * on the type of document and access
    * the user has.
+   *  when PUT /documents/:id is called
    * @param {Object} req
    * @param {Object} res
-   * @return {Object} res
+   * @return {Object} response
    */
   static update(req, res) {
-    const documentId = req.params.id;
-    Document.findById(documentId)
-      .then((document) => {
-        if (!document) {
-          return Response
-            .notFound(res, `Document with id ${documentId} not found`);
-        }
-        const message = 'Forbidden, you cannot edit this document';
-        Access.docAccess(req, document, 'editable', message)
-          .then((request) => {
-            document.update(request.body)
-            .then(data => Response.success(res, data, 'Document updated'))
-            .catch(err => Response.badRequest(res, err.errors));
-          })
-          .catch(err => Response.forbidden(res, err.message));
-      });
+    Access.docAccess(req, req.doc, 'editable',
+    'Forbidden, you cannot edit this document')
+      .then((request) => {
+        req.doc.update(request.body)
+        .then(data => Response.success(res, data, 'Document updated'))
+        .catch(err => Response.badRequest(res, err.errors));
+      })
+      .catch(err => Response.forbidden(res, err.message));
   }
 
   /**
-   * Delete a single document
-   * deletes a document base on
+   * Deletes a document
+   * @description Deletes a document base
    * the access level of the user
+   * when UPDATE /documents is called
    * @param {Object} req
    * @param {Object} res
-   * @return {Object} res
+   * @return {Object} response
    */
   static delete(req, res) {
-    const documentId = req.params.id;
-    Document.findById(documentId)
-      .then((document) => {
-        if (!document) {
-          return Response
-            .notFound(res, `Document with id ${documentId} not found`);
-        }
-        Access.docAccess(req, document, 'delete')
-        .then(() => {
-          document.destroy()
-          .then(() => Response.success(res, document, 'Document deleted'));
-        }).catch(err => Response.forbidden(res, err.message));
-      }).catch(err => Response.serverError(res, err.message));
+    Access.docAccess(req, req.doc, 'delete')
+    .then(() => {
+      req.doc.destroy()
+      .then(() => Response.success(res, req.doc, 'Document deleted'));
+    }).catch(err => Response.forbidden(res, err.message));
   }
 }

@@ -99,7 +99,7 @@ describe('Document controller', () => {
       chai.request(app)
         .get('/documents')
         .set('Authorization', `Bearer ${adminToken}`)
-        .query({ q: 'the' })
+        .query({ search: 'the' })
         .end((err, res) => {
           res.should.have.status(200);
           res.body.data.should.be.a('object');
@@ -111,7 +111,7 @@ describe('Document controller', () => {
         });
     });
 
-    it('should get all documents that belongs to an authenticated user',
+    it('should return all documents that belongs to an authenticated user',
       (done) => {
         chai.request(app)
         .get('/documents')
@@ -126,9 +126,25 @@ describe('Document controller', () => {
           done();
         });
       });
+
+    it('should return all documents if user is an admin',
+      (done) => {
+        chai.request(app)
+        .get('/documents')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.data.should.be.a('object');
+          res.body.data.should.have.property('count').eql(5);
+          res.body.data.should.have.property('next');
+          res.body.data.rows.should.be.a('array');
+          res.body.data.rows.should.have.lengthOf(5);
+          done();
+        });
+    });
   });
 
-  describe('Get single documents', () => {
+  describe('Get single document', () => {
     it('should get  a single document of an authenticated user', (done) => {
       chai.request(app)
         .get('/documents/2')
@@ -144,6 +160,25 @@ describe('Document controller', () => {
             .eql('It is a wonderful movie');
           res.body.data.should.have.property('public').to.eql(1);
           res.body.data.should.have.property('editable').to.eql(0);
+          done();
+        });
+    });
+
+    it('should get any document if user is admin', (done) => {
+      chai.request(app)
+        .get('/documents/3')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.data.should.be.a('object');
+          res.body.data.should.have.property('id').to.eql(3);
+          res.body.data.should.have.property('ownerId').to.eql(401);
+          res.body.data.should.have.property('title').to
+            .eql('The hunger games');
+          res.body.data.should.have.property('content').to
+            .eql('here is an environment for verse Whose features');
+          res.body.data.should.have.property('public').to.eql(0);
+          res.body.data.should.have.property('editable').to.eql(1);
           done();
         });
     });
