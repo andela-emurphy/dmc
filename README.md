@@ -37,25 +37,25 @@ POST /users/login             |   Logs a user in.
 POST /users/logout            |   Logs a user out.
 POST /users/                  |   Creates a new user.
 GET /users/                   |   Find matching instances of user.
-GET /users?q=name             |   search the users base on the query param 
+GET /users?search=name             |   search the users base on the query param 
 GET /users?limit=2            |   limits the users return, maximum of ten
-GET /users?q=limit&offset=2   |   sets the next users to get 
+GET /users?search=limit&offset=2   |   sets the next users to get 
 GET /users/<id>               |   gets a single user.
 PUT /users/<id>               |   Update user.
 DELETE /users/<id>            |   Delete user.
 POST /documents/              |   Creates a new document instance.
 GET /documents/               |   Find matching instances of document.
-GET /documents?q=name         |   search the documents base on the query param 
+GET /documents?search=name         |   search the documents base on the query param 
 GET /documents?limit=2        |   limits the documents return, maximum of ten
-GET /documents?q=limit&offset=2   |   sets the next documents to get 
+GET /documents?search=limit&offset=2   |   sets the next documents to get 
 GET /documents/<id>           |   Find document.
 PUT /documents/<id>           |   Update document attributes.
 DELETE /documents/<id>        |   Delete document.
 POST /roles/                  |   Creates a new user.
 GET /roles/                   |   Find matching instances of role.
-GET /roles?q=name             |   search the roles base on the query param 
+GET /roles?search=name             |   search the roles base on the query param 
 GET /roles?limit=2            |   limits the roles return, maximum of ten
-GET /roles?q=limit&offset=2   |   sets the next role to get 
+GET /roles?search=limit&offset=2   |   sets the next role to get 
 GET /roles/<id>               |   gets a single role.
 PUT /roles/<id>               |   Update role.
 DELETE /roles/<id>            |   Delete role.
@@ -271,7 +271,7 @@ Endpoint for document API.
 ### Search
 #### Documents
 #### Request
-- Endpoint: GET: `/documents?q=moyo`
+- Endpoint: GET: `/documents?search=moyo`
 - Requires: Authentication
 #### Response
 - Status: `200: OK`
@@ -298,7 +298,7 @@ Endpoint for document API.
 ```
 ### Users
 #### Request
-- Endpoint: GET: `/users?q=andela`
+- Endpoint: GET: `/users?search=andela`
 - Requires: Authentication, Admin Role
 #### Response
 - Status: `200: OK`

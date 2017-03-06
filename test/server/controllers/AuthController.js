@@ -8,8 +8,6 @@ import db from '../../../app/db/models/index.js';
 chai.use(chaiHttp);
 chai.should();
 
-
-
 describe('Index endpoint', () => {
   it('should return 200', (done) => {
     chai.request(app)
