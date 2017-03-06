@@ -5,6 +5,7 @@
   "main": "es5/server.js",
   "scripts": {
     "start": "node es5/server.js",
+    "prestart": "npm install",
     "production": "node_modules/.bin/gulp babel && npm start",
     "babel-node": "nodemon --exec node_modules/.bin/babel-node  server/server.js",
     "build": "babel server.js -d src",
@@ -14,7 +15,7 @@
     "seed:undo": "node_modules/.bin/sequelize db:seed:undo:all",
     "migrate": "node_modules/.bin/sequelize db:migrate",
     "migrate:undo": "node_modules/.bin/sequelize db:migrate:undo:all",
-    "test": "cross-env NODE_ENV=test ./node_modules/.bin/_mocha  ./test/server/**/*.js -- --require babel-register",
+    "test": "cross-env NODE_ENV=test npm run migrate && ./node_modules/.bin/_mocha  ./test/server/**/*.js -- --require babel-register",
     "coverage": "cross-env NODE_ENV=test node_modules/.bin/istanbul cover  ./node_modules/.bin/_mocha  ./test/server/**/*.js -- --require babel-register"
   },
   "nyc": {
@@ -44,7 +45,6 @@
     "babel-core": "^6.21.0",
     "babel-istanbul": "^0.12.1",
     "babel-plugin-istanbul": "^3.1.2",
-    "babel-register": "^6.23.0",
     "babel-watch": "^2.0.5",
     "bluebird": "^3.4.7",
     "chai": "^3.5.0",
@@ -79,6 +79,7 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-stage-0": "^6.22.0",
     "babel-runtime": "^6.23.0",
+    "babel-register": "^6.23.0",
     "bcryptjs": "^2.4.0",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",
