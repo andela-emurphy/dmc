@@ -49,10 +49,10 @@ export const userPermission = (req, res, next) => {
 };
 
 /**
- * Admin permission
- * @description verifies user access.
+ * Document permission
+ * @description verifies document access.
  * makes route endpoint available for
- * admin and regular users
+ * admin and users
  * @param  {Object} req - request object
  * @param  {Object} res - response object
  * @param {String}  next - callback if authentication is a success

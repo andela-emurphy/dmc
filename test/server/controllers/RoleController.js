@@ -2,8 +2,8 @@ import chaiHttp from 'chai-http';
 import chai from 'chai';
 
 import { userData } from '../TestData';
-import app from '../../../server.js';
-import db from '../../../app/db/models/index.js';
+import app from '../../../server/server';
+import db from '../../../server/app/db/models/index';
 
 chai.use(chaiHttp);
 chai.should();

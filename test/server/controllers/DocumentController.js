@@ -1,7 +1,7 @@
 import chaiHttp from 'chai-http';
 import chai from 'chai';
-import app from '../../../server';
-import db from '../../../app/db/models/index';
+import app from '../../../server/server';
+import db from '../../../server/app/db/models/index';
 import { userData, documentData } from '../TestData';
 
 
@@ -203,6 +203,20 @@ describe('Document controller', () => {
           done();
         });
       });
+  });
+
+  describe('Get user document', () => {
+    it('should get all user document', (done) => {
+      chai.request(app)
+        .get('/users/400/documents')
+        .set('Authorization', `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.data.should.be.a('array');
+          res.body.data.should.have.lengthOf(2);
+          done();
+        });
+    });
   });
 
   describe('Create a document', () => {
