@@ -26,6 +26,7 @@
     "instrument": false
   },
   "reporter": [
+    
     "text-lcov",
     "text-summary",
     "html"
