@@ -26,7 +26,8 @@ module.exports = {
       updatedAt: new Date()
     }));
 
-    return queryInterface.bulkInsert('Documents', documents);
+    return queryInterface.bulkInsert('Documents', documents,
+      { returning: true });
   },
 
   down(queryInterface) {

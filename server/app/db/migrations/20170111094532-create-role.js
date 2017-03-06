@@ -3,7 +3,6 @@ module.exports = {
     return queryInterface.createTable('Roles', {
       title: {
         type: Sequelize.STRING,
-        defaultValue: 'regular',
         primaryKey: true,
         unique: true
       },

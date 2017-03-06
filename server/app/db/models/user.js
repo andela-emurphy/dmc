@@ -55,13 +55,13 @@ export default (sequelize, DataTypes) => {
       unique: {
         args: true,
         msg: `Oops. Looks like you already have an account 
-          with this email address. Please try to login`,
+          with this email address. Please try and login`,
         fields: [sequelize.fn('lower', sequelize.col('email'))]
       },
       validate: {
         isEmail: {
           args: true,
-          msg: 'The email you entered is not a valid',
+          msg: 'The email you entered is not valid',
         },
         max: {
           args: 254,

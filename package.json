@@ -5,18 +5,18 @@
   "main": "es5/server.js",
   "scripts": {
     "start": "node es5/server.js",
+    "prestart": "npm install",
     "production": "node_modules/.bin/gulp babel && npm start",
     "babel-node": "nodemon --exec node_modules/.bin/babel-node  server/server.js",
-    "build": "babel server.js -d src",
-    "coverage": "cross-env NODE_ENV=test istanbul cover _mocha es5/test/**/**",
+    "build": "gulp babel",
     "coveralls": "npm run coverage -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "lint": "node_modules/.bin/eslint app/** test/** ",
     "seed": "npm run migrate && node_modules/.bin/sequelize db:seed:all",
     "seed:undo": "node_modules/.bin/sequelize db:seed:undo:all",
-    "migrate": "node_modules/.bin/sequelize db:migrate",
+    "migrate": "npm run build && node_modules/.bin/sequelize db:migrate",
     "migrate:undo": "node_modules/.bin/sequelize db:migrate:undo:all",
-    "test": "gulp babel && cross-env NODE_ENV=test npm run test:dev",
-    "test:dev": "npm run migrate && npm run coverage"
+    "test": "cross-env NODE_ENV=test npm run migrate && npm run coverage",
+    "coverage": "cross-env NODE_ENV=test node_modules/.bin/istanbul cover  ./node_modules/.bin/_mocha  ./test/server/**/*.js -- --require babel-register"
   },
   "nyc": {
     "require": [
@@ -41,11 +41,10 @@
   },
   "homepage": "https://github.com/andela-emurphy/document-management-system#readme",
   "devDependencies": {
-    "babel-cli": "^6.18.0",
+    "babel-cli": "^6.23.0",
     "babel-core": "^6.21.0",
     "babel-istanbul": "^0.12.1",
     "babel-plugin-istanbul": "^3.1.2",
-    "babel-register": "^6.22.0",
     "babel-watch": "^2.0.5",
     "bluebird": "^3.4.7",
     "chai": "^3.5.0",
@@ -61,7 +60,7 @@
     "gulp-mocha": "^3.0.1",
     "gulp-nodemon": "^2.2.1",
     "gulp-sourcemaps": "^2.4.0",
-    "istanbul": "^0.4.5",
+    "istanbul": "^1.1.0-alpha.1",
     "istanbul-harmony": "^0.3.16",
     "mocha": "^3.2.0",
     "node-mocks-http": "^1.6.1",
@@ -80,6 +79,7 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-stage-0": "^6.22.0",
     "babel-runtime": "^6.23.0",
+    "babel-register": "^6.23.0",
     "bcryptjs": "^2.4.0",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",

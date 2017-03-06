@@ -27,14 +27,6 @@ gulp.task('babel:test', () => gulp.src(paths.test)
     .pipe(babel())
     .pipe(gulp.dest(`${paths.sourceRoot}/test`)));
 
-gulp.task('start', ['babel'], () => nodemon({
-  script: `${paths.sourceRoot}/server.js`,
-  ext: 'js html',
-  ignore: [`${paths.es5}`],
-  env: { NODE_ENV: 'development' },
-  tasks: ['babel']
-}));
-
 gulp.task('babel', ['babel:test', 'babel:server']);
 
 gulp.task('watch', () => gulp
@@ -43,6 +35,14 @@ gulp.task('watch', () => gulp
 gulp.task('test:server', ['babel'], () => gulp
     .src('es5/test/server/**/*.js')
     .pipe(mocha({ reporter: 'nyan' })));
+
+gulp.task('start', ['babel'], () => nodemon({
+  script: `${paths.sourceRoot}/server.js`,
+  ext: 'js html',
+  ignore: [`${paths.es5}`],
+  env: { NODE_ENV: 'development' },
+  tasks: ['babel']
+}));
 
 gulp.task('test', ['test:server'], () => gulp
   .watch('./test/**/**', ['test:server']));

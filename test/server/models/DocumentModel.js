@@ -1,9 +1,8 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
-import db from '../../../app/db/models/index';
+import db from '../../../server/app/db/models';
 import { userData, documentData } from '../TestData';
-
 
 chai.use(chaiAsPromised);
 const should = chai.should();
@@ -45,7 +44,7 @@ describe('Document model', () => {
       });
     });
 
-    it('should throw an error any field is empty', (done) => {
+    it('should throw an error if any field is empty', (done) => {
       db.Document.create({
         title: 'saitama',
       })

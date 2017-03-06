@@ -1,7 +1,7 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
-import db from '../../../app/db/models/index';
+import db from '../../../server/app/db/models';
 
 chai.use(chaiAsPromised);
 const should = chai.should();

@@ -1,8 +1,8 @@
 import chaiHttp from 'chai-http';
 import chai from 'chai';
 
-import app from '../../../server';
-import db from '../../../app/db/models/index';
+import app from '../../../server/server';
+import db from '../../../server/app/db/models';
 
 import { userData } from '../TestData';
 
@@ -50,7 +50,7 @@ describe('Authentication Middleware', () => {
 
   it('should return 401 for invalid token', (done) => {
     chai.request(app)
-      .post('/logout')
+      .post('/users/logout')
       .set('Authorization', 'Bearer token')
       .end((err, res) => {
         res.should.have.status(401);

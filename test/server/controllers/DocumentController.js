@@ -1,9 +1,9 @@
 import chaiHttp from 'chai-http';
 import chai from 'chai';
-import app from '../../../server';
-import db from '../../../app/db/models/index';
-import { userData, documentData } from '../TestData';
 
+import app from '../../../server/server';
+import db from '../../../server/app/db/models';
+import { userData, documentData } from '../TestData';
 
 chai.use(chaiHttp);
 chai.should();
@@ -56,7 +56,7 @@ describe('Document controller', () => {
           res.should.have.status(200);
           res.body.data.should.be.a('object');
           res.body.data.should.have.property('count').eql(5);
-          res.body.data.should.have.property('next');
+          res.body.data.should.have.property('pagination');
           res.body.data.rows.should.be.a('array');
           res.body.data.rows.should.have.lengthOf(5);
           done();
@@ -71,8 +71,7 @@ describe('Document controller', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.data.should.be.a('object');
-          res.body.data.should.have.property('count').eql(5);
-          res.body.data.should.have.property('next').eql(5);
+          res.body.data.should.have.property('pagination');
           res.body.data.rows.should.be.a('array');
           res.body.data.rows.should.have.lengthOf(1);
           done();
@@ -88,7 +87,7 @@ describe('Document controller', () => {
           res.should.have.status(200);
           res.body.data.should.be.a('object');
           res.body.data.should.have.property('count').eql(5);
-          res.body.data.should.have.property('next');
+          res.body.data.should.have.property('pagination');
           res.body.data.rows.should.be.a('array');
           res.body.data.rows.should.have.lengthOf(3);
           done();
@@ -99,19 +98,19 @@ describe('Document controller', () => {
       chai.request(app)
         .get('/documents')
         .set('Authorization', `Bearer ${adminToken}`)
-        .query({ q: 'the' })
+        .query({ search: 'the' })
         .end((err, res) => {
           res.should.have.status(200);
           res.body.data.should.be.a('object');
           res.body.data.should.have.property('count').eql(3);
-          res.body.data.should.have.property('next').eql(1);
+          res.body.data.should.have.property('pagination');
           res.body.data.rows.should.be.a('array');
           res.body.data.rows.should.have.lengthOf(3);
           done();
         });
     });
 
-    it('should get all documents that belongs to an authenticated user',
+    it('should return all documents that belongs to an authenticated user',
       (done) => {
         chai.request(app)
         .get('/documents')
@@ -120,15 +119,31 @@ describe('Document controller', () => {
           res.should.have.status(200);
           res.body.data.should.be.a('object');
           res.body.data.should.have.property('count').eql(3);
-          res.body.data.should.have.property('next');
+          res.body.data.should.have.property('pagination');
           res.body.data.rows.should.be.a('array');
           res.body.data.rows.should.have.lengthOf(3);
           done();
         });
       });
+
+    it('should return all documents if user is an admin',
+      (done) => {
+        chai.request(app)
+        .get('/documents')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.data.should.be.a('object');
+          res.body.data.should.have.property('count').eql(5);
+          res.body.data.should.have.property('pagination');
+          res.body.data.rows.should.be.a('array');
+          res.body.data.rows.should.have.lengthOf(5);
+          done();
+        });
+      });
   });
 
-  describe('Get single documents', () => {
+  describe('Get single document', () => {
     it('should get  a single document of an authenticated user', (done) => {
       chai.request(app)
         .get('/documents/2')
@@ -144,6 +159,25 @@ describe('Document controller', () => {
             .eql('It is a wonderful movie');
           res.body.data.should.have.property('public').to.eql(1);
           res.body.data.should.have.property('editable').to.eql(0);
+          done();
+        });
+    });
+
+    it('should get any document if user is admin', (done) => {
+      chai.request(app)
+        .get('/documents/3')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.data.should.be.a('object');
+          res.body.data.should.have.property('id').to.eql(3);
+          res.body.data.should.have.property('ownerId').to.eql(401);
+          res.body.data.should.have.property('title').to
+            .eql('The hunger games');
+          res.body.data.should.have.property('content').to
+            .eql('here is an environment for verse Whose features');
+          res.body.data.should.have.property('public').to.eql(0);
+          res.body.data.should.have.property('editable').to.eql(1);
           done();
         });
     });
@@ -168,6 +202,20 @@ describe('Document controller', () => {
           done();
         });
       });
+  });
+
+  describe('Get user document', () => {
+    it('should get all user document', (done) => {
+      chai.request(app)
+        .get('/users/400/documents')
+        .set('Authorization', `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.data.should.be.a('array');
+          res.body.data.should.have.lengthOf(2);
+          done();
+        });
+    });
   });
 
   describe('Create a document', () => {
@@ -204,7 +252,8 @@ describe('Document controller', () => {
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.have.status(400);
-            res.body.message[0].message.should.eql('title cannot be null');
+            res.body.message.should.be.a('array');
+            res.body.message[0].should.eql('title cannot be null');
             done();
           });
       });
@@ -326,7 +375,7 @@ describe('Document controller', () => {
         .end((err, res) => {
           res.should.have.status(400);
           res.body.should.have.property('status').to.eql(false);
-          res.body.message[0].message.should.eql('public cannot be null');
+          res.body.message[0].should.eql('public cannot be null');
           done();
         });
     });

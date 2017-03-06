@@ -2,12 +2,22 @@ import chaiHttp from 'chai-http';
 import chai from 'chai';
 
 import { userData } from '../TestData';
-import app from '../../../server.js';
-import db from '../../../app/db/models/index.js';
+import app from '../../../server/server';
+import db from '../../../server/app/db/models';
 
 chai.use(chaiHttp);
 chai.should();
 
+describe('Index endpoint', () => {
+  it('should return 200', (done) => {
+    chai.request(app)
+      .get('/')
+      .end((err, res) => {
+        res.should.have.status(200);
+        done();
+      });
+  });
+});
 
 describe('Authentication controller', () => {
   before((done) => {
@@ -40,6 +50,18 @@ describe('Authentication controller', () => {
           res.body.data.should.have.property('lastname').eql('uncle');
           res.body.data.should.have.property('email').eql('admin@test.com');
           res.body.data.should.have.property('token');
+          done();
+        });
+    });
+
+    it('Should return status 201 if no username or password sent', (done) => {
+      chai.request(app)
+        .post('/users/login')
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property('message')
+            .eql('Authentication failed! username and password required');
           done();
         });
     });

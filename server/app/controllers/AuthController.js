@@ -3,7 +3,7 @@ import moment from 'moment';
 import Crypto from 'crypto';
 import dotenv from 'dotenv';
 import Response from '../utils/ApiResponse';
-import db from '../db/models/index';
+import db from '../db/models';
 
 
 dotenv.config();
@@ -40,7 +40,7 @@ export default class AuthController {
       const token = jwt.sign({
         sub: user.id,
         role: user.role,
-        exp: moment().add(7, secret).valueOf(),
+        exp: moment().add(2, secret).valueOf(),
       }, secret);
 
       user = user.toPublicJson();
@@ -66,9 +66,9 @@ export default class AuthController {
       where: {
         token_hash: Crypto.createHash('md5').update(token).digest('hex')
       }
-    }).then((tokeHash) => {
-      tokeHash.destroy()
-        .then(() => Response.success(res, [], 'You have been logged out'))
+    }).then((tokenHash) => {
+      tokenHash.destroy()
+        .then(() => Response.success(res, null, 'You have been logged out'))
         .catch(err => Response.serverError(res, err.message));
     });
   }

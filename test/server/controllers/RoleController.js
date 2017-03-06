@@ -2,8 +2,8 @@ import chaiHttp from 'chai-http';
 import chai from 'chai';
 
 import { userData } from '../TestData';
-import app from '../../../server.js';
-import db from '../../../app/db/models/index.js';
+import app from '../../../server/server';
+import db from '../../../server/app/db/models';
 
 chai.use(chaiHttp);
 chai.should();
@@ -70,8 +70,7 @@ describe('Role controller', () => {
           res.body.should.have.property('message');
           res.body.message.should.be.a('array');
           res.body.message.should.have.lengthOf(1);
-          res.body.message[0].should.have.property('message')
-            .eql('title must be unique');
+          res.body.message[0].should.eql('title cannot be null');
           done();
         });
     });
@@ -86,8 +85,7 @@ describe('Role controller', () => {
           res.body.should.have.property('message');
           res.body.message.should.be.a('array');
           res.body.message.should.have.lengthOf(1);
-          res.body.message[0].should.have.property('message')
-            .eql('title must be unique');
+          res.body.message[0].should.eql('title must be unique');
           done();
         });
     });
@@ -118,7 +116,7 @@ describe('Role controller', () => {
       });
     });
 
-    it('should return a role', (done) => {
+    it('should return a role admin', (done) => {
       chai.request(app)
         .get('/roles/admin')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -151,7 +149,7 @@ describe('Role controller', () => {
         res.should.have.status(200);
         res.body.data.should.be.a('object');
         res.body.data.should.have.property('count').eql(3);
-        res.body.data.should.have.property('next');
+        res.body.data.should.have.property('pagination');
         res.body.data.rows.should.be.a('array');
         res.body.data.rows.should.have.lengthOf(3);
         done();
@@ -167,7 +165,7 @@ describe('Role controller', () => {
         res.should.have.status(200);
         res.body.data.should.be.a('object');
         res.body.data.should.have.property('count').eql(3);
-        res.body.data.should.have.property('next').eql(1);
+        res.body.data.should.have.property('pagination');
         res.body.data.rows.should.be.a('array');
         res.body.data.rows.should.have.lengthOf(2);
         done();
@@ -183,22 +181,23 @@ describe('Role controller', () => {
         res.should.have.status(200);
         res.body.data.should.be.a('object');
         res.body.data.should.have.property('count').eql(3);
-        res.body.data.should.have.property('next');
+        res.body.data.should.have.property('pagination');
         res.body.data.rows.should.be.a('array');
         res.body.data.rows.should.have.lengthOf(1);
         done();
       });
     });
-    it('should return one role for query any param', (done) => {
+
+    it('should return one role for any query param', (done) => {
       chai.request(app)
       .get('/roles')
       .set('Authorization', `Bearer ${adminToken}`)
-      .query({ q: 'admin' })
+      .query({ search: 'admin' })
       .end((err, res) => {
         res.should.have.status(200);
         res.body.data.should.be.a('object');
         res.body.data.should.have.property('count').eql(1);
-        res.body.data.should.have.property('next');
+        res.body.data.should.have.property('pagination');
         res.body.data.rows.should.be.a('array');
         res.body.data.rows.should.have.lengthOf(1);
         done();

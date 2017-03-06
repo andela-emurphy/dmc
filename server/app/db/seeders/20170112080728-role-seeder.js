@@ -25,6 +25,6 @@ module.exports = {
       return queryInterface.bulkDelete('Person', null, {});
     */
 
-    return queryInterface.bulkDelete('Roles', null, {});
+    return queryInterface.bulkDelete('Roles', null, { returning: true });
   }
 };

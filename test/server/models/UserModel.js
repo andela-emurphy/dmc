@@ -1,8 +1,8 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import db from '../../../app/db/models/index';
-import { userData } from '../TestData';
 
+import db from '../../../server/app/db/models';
+import { userData } from '../TestData';
 
 chai.use(chaiAsPromised);
 const should = chai.should();
@@ -24,7 +24,6 @@ describe('User model', () => {
   after((done) => {
     db.sequelize.sync({ force: true }).then(() => done());
   });
-
 
   describe('Create User', () => {
     it('should create a new user', (done) => {
