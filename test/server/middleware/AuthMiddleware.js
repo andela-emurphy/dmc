@@ -50,7 +50,7 @@ describe('Authentication Middleware', () => {
 
   it('should return 401 for invalid token', (done) => {
     chai.request(app)
-      .post('/logout')
+      .post('/users/logout')
       .set('Authorization', 'Bearer token')
       .end((err, res) => {
         res.should.have.status(401);

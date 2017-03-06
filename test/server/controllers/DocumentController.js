@@ -56,7 +56,7 @@ describe('Document controller', () => {
           res.should.have.status(200);
           res.body.data.should.be.a('object');
           res.body.data.should.have.property('count').eql(5);
-          res.body.data.should.have.property('next');
+          res.body.data.should.have.property('pagination');
           res.body.data.rows.should.be.a('array');
           res.body.data.rows.should.have.lengthOf(5);
           done();
@@ -71,8 +71,7 @@ describe('Document controller', () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.data.should.be.a('object');
-          res.body.data.should.have.property('count').eql(5);
-          res.body.data.should.have.property('next').eql(5);
+          res.body.data.should.have.property('pagination');
           res.body.data.rows.should.be.a('array');
           res.body.data.rows.should.have.lengthOf(1);
           done();
@@ -88,7 +87,7 @@ describe('Document controller', () => {
           res.should.have.status(200);
           res.body.data.should.be.a('object');
           res.body.data.should.have.property('count').eql(5);
-          res.body.data.should.have.property('next');
+          res.body.data.should.have.property('pagination');
           res.body.data.rows.should.be.a('array');
           res.body.data.rows.should.have.lengthOf(3);
           done();
@@ -104,7 +103,7 @@ describe('Document controller', () => {
           res.should.have.status(200);
           res.body.data.should.be.a('object');
           res.body.data.should.have.property('count').eql(3);
-          res.body.data.should.have.property('next').eql(1);
+          res.body.data.should.have.property('pagination');
           res.body.data.rows.should.be.a('array');
           res.body.data.rows.should.have.lengthOf(3);
           done();
@@ -120,7 +119,7 @@ describe('Document controller', () => {
           res.should.have.status(200);
           res.body.data.should.be.a('object');
           res.body.data.should.have.property('count').eql(3);
-          res.body.data.should.have.property('next');
+          res.body.data.should.have.property('pagination');
           res.body.data.rows.should.be.a('array');
           res.body.data.rows.should.have.lengthOf(3);
           done();
@@ -136,7 +135,7 @@ describe('Document controller', () => {
           res.should.have.status(200);
           res.body.data.should.be.a('object');
           res.body.data.should.have.property('count').eql(5);
-          res.body.data.should.have.property('next');
+          res.body.data.should.have.property('pagination');
           res.body.data.rows.should.be.a('array');
           res.body.data.rows.should.have.lengthOf(5);
           done();

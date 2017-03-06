@@ -49,10 +49,9 @@ export const userPermission = (req, res, next) => {
 };
 
 /**
- * Document permission
- * @description verifies document access.
- * makes route endpoint available for
- * admin and users
+ * Document middleware
+ * @description abstracts single document
+ * query
  * @param  {Object} req - request object
  * @param  {Object} res - response object
  * @param {String}  next - callback if authentication is a success

@@ -151,7 +151,7 @@ describe('Role controller', () => {
         res.should.have.status(200);
         res.body.data.should.be.a('object');
         res.body.data.should.have.property('count').eql(3);
-        res.body.data.should.have.property('next');
+        res.body.data.should.have.property('pagination');
         res.body.data.rows.should.be.a('array');
         res.body.data.rows.should.have.lengthOf(3);
         done();
@@ -167,7 +167,7 @@ describe('Role controller', () => {
         res.should.have.status(200);
         res.body.data.should.be.a('object');
         res.body.data.should.have.property('count').eql(3);
-        res.body.data.should.have.property('next').eql(1);
+        res.body.data.should.have.property('pagination');
         res.body.data.rows.should.be.a('array');
         res.body.data.rows.should.have.lengthOf(2);
         done();
@@ -183,7 +183,7 @@ describe('Role controller', () => {
         res.should.have.status(200);
         res.body.data.should.be.a('object');
         res.body.data.should.have.property('count').eql(3);
-        res.body.data.should.have.property('next');
+        res.body.data.should.have.property('pagination');
         res.body.data.rows.should.be.a('array');
         res.body.data.rows.should.have.lengthOf(1);
         done();
@@ -199,7 +199,7 @@ describe('Role controller', () => {
         res.should.have.status(200);
         res.body.data.should.be.a('object');
         res.body.data.should.have.property('count').eql(1);
-        res.body.data.should.have.property('next');
+        res.body.data.should.have.property('pagination');
         res.body.data.rows.should.be.a('array');
         res.body.data.rows.should.have.lengthOf(1);
         done();
