@@ -36,9 +36,8 @@ describe('Document model', () => {
           .eql('Goku vs Saitama death match');
         document.should.have.property('content').to
           .eql('Goku ends up dieing lol');
-        document.should.have.property('public').to
-          .eql(0);
-        document.should.have.property('editable').to.eql(0);
+        document.should.have.property('access').to
+          .eql('role');
         document.should.have.property('ownerId').to.eql(400);
         done();
       });
@@ -55,8 +54,7 @@ describe('Document model', () => {
       db.Document.create({
         title: 'Goku in the after life',
         content: 'Naruto vs the sage of six path',
-        public: 1,
-        editable: 1,
+        access: 'public',
         ownerId: 56789
       })
       .should.be.rejected.notify(done);
@@ -92,8 +90,7 @@ describe('Document model', () => {
       db.Document.update({
         title: 'Naruto vs Saitama',
         content: 'Naruto vs Saitama',
-        public: 1,
-        editable: 1
+        access: 'public',
       }, {
         where: { id: 5 }
       })
@@ -106,8 +103,7 @@ describe('Document model', () => {
         document.should.have.property('title').to.eql('Naruto vs Saitama');
         document.should.have.property('content').to
           .eql('Naruto vs Saitama');
-        document.should.have.property('public').to.eql(1);
-        document.should.have.property('editable').to.eql(1);
+        document.should.have.property('access').to.eql('public');
         done();
       });
     });

@@ -45,7 +45,7 @@ export default class Response {
    * @param {String} message - message about response
    * @returns {Object}  response to be sent to client
    */
-  static success(res, data = []) {
+  static success(res, data) {
     return this.setStatus(200)
       .respond(res, data);
   }
@@ -111,7 +111,6 @@ export default class Response {
   static forbidden(res, message) {
     return this.setStatus(403)
       .respond(res, {
-        status: false,
         message
       });
   }

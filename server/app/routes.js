@@ -27,8 +27,8 @@ export default (express, app) => {
   Router.get('/documents', DocumentController.getAll);
   Router.get('/documents/:id', documentPermission, DocumentController.get);
   Router.put('/documents/:id', documentPermission, DocumentController.update);
-  Router.delete('/documents/:id',
-    documentPermission, DocumentController.delete);
+  Router.delete('/documents/:id', documentPermission,
+    DocumentController.delete);
 
   // manage roles
   Router.post('/roles', adminPermission, RoleController.create);

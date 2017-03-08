@@ -43,13 +43,12 @@ describe('Authentication controller', () => {
         })
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.data.should.be.a('object');
-          res.body.should.have.property('message');
-          res.body.data.should.have.property('username').eql('dadmin');
-          res.body.data.should.have.property('firstname').eql('uncle');
-          res.body.data.should.have.property('lastname').eql('uncle');
-          res.body.data.should.have.property('email').eql('admin@test.com');
-          res.body.data.should.have.property('token');
+          res.body.should.be.a('object');
+          res.body.should.have.property('username').eql('dadmin');
+          res.body.should.have.property('firstname').eql('uncle');
+          res.body.should.have.property('lastname').eql('uncle');
+          res.body.should.have.property('email').eql('admin@test.com');
+          res.body.should.have.property('token');
           done();
         });
     });

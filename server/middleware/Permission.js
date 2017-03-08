@@ -1,6 +1,6 @@
 import Response from '../app/utils/ApiResponse';
 import Query from '../app/utils/Query';
-
+import db from '../app/db/models';
 
 /**
  * Admin permission
@@ -58,6 +58,26 @@ export const userPermission = (req, res, next) => {
  * @returns {Object}  response to be sent to client
  * */
 export const documentPermission = (req, res, next) => {
+  const user = req.user;
   const docId = parseInt(req.params.id, 10);
-  Query.findDocById(req, res, next, docId);
+  db.Document.findById(docId)
+    .then((doc) => {
+      if (!doc) {
+        return Response
+          .notFound(res, `Document with id ${docId} not found`);
+      }
+      req.doc = doc;
+      doc.getUser().then((docUser) => {
+        req.doc.user = docUser;
+        if (req.method === 'GET') {
+          next();
+        } else if (user.role === 'admin' || user.sub === doc.ownerId) {
+          next();
+        } else {
+          return Response
+            .forbidden(res, 'Forbidden! you cannot access this document');
+        }
+      });
+    })
+    .catch(err => Response.serverError(res, err));
 };

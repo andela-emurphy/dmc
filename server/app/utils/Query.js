@@ -37,30 +37,6 @@ class Query {
       .catch(err => Response.serverError(res, err.message));
   }
 
-    /**
-  * Find Document By Id
-  * @description queries the database
-  * and returns a Document cursor if document exist
-  * in the database
-  * @param {Object} req
-  * @param {Object} res
-  * @param {function}  next callback
-  * @param {Object} docId
-  * @return {Object} response
-  */
-  static findDocById(req, res, next, docId) {
-    db.Document.findById(docId)
-      .then((doc) => {
-        if (!doc) {
-          return Response
-            .notFound(res, `Document with id ${docId} not found`);
-        }
-        req.doc = doc;
-        return next();
-      })
-      .catch(err => Response.serverError(res, err.message));
-  }
-
   /**
   * docQuery
   * @description sets up document query
@@ -81,7 +57,7 @@ class Query {
       query.where = {
         $or: [
             { ownerId: req.user.sub },
-            { public: 1 }
+            { access: 'public' }
         ]
       };
     }

@@ -68,7 +68,7 @@ export default class AuthController {
       }
     }).then((tokenHash) => {
       tokenHash.destroy()
-        .then(() => Response.success(res, null, 'You have been logged out'))
+        .then(() => Response.success(res, 'You have been logged out'))
         .catch(err => Response.serverError(res, err.message));
     });
   }

@@ -25,14 +25,14 @@ describe('Role controller', () => {
             password: '12345678'
           })
           .then((res) => {
-            token = res.body.data.token;
+            token = res.body.token;
             chai.request(app)
               .post('/users/login')
               .send({
                 username: 'dadmin',
                 password: '12345678'
               }).then((res) => {
-                adminToken = res.body.data.token;
+                adminToken = res.body.token;
                 done();
               });
           });
@@ -53,9 +53,8 @@ describe('Role controller', () => {
         })
         .end((err, res) => {
           res.should.have.status(201);
-          res.body.data.should.be.a('object');
-          res.body.should.have.property('message');
-          res.body.data.should.have.property('title').eql('fellow');
+          res.body.should.be.a('object');
+          res.body.should.have.property('title').eql('fellow');
           done();
         });
     });
@@ -104,14 +103,14 @@ describe('Role controller', () => {
   });
 
   describe('Get role', () => {
-    it('should return status 200', (done) => {
+    it('should return status 200 when a role is created', (done) => {
       chai.request(app)
       .get('/roles/regular')
       .set('Authorization', `Bearer ${adminToken}`)
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.data.should.be.a('object');
-        res.body.data.should.have.property('title').eql('regular');
+        res.body.should.be.a('object');
+        res.body.should.have.property('title').eql('regular');
         done();
       });
     });
@@ -121,8 +120,8 @@ describe('Role controller', () => {
         .get('/roles/admin')
         .set('Authorization', `Bearer ${adminToken}`)
         .end((err, res) => {
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('title').eql('admin');
+          res.body.should.be.a('object');
+          res.body.should.have.property('title').eql('admin');
           done();
         });
     });
@@ -147,11 +146,24 @@ describe('Role controller', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.data.should.be.a('object');
-        res.body.data.should.have.property('count').eql(3);
-        res.body.data.should.have.property('pagination');
-        res.body.data.rows.should.be.a('array');
-        res.body.data.rows.should.have.lengthOf(3);
+        res.body.should.be.a('object');
+        res.body.should.have.property('pagination');
+        res.body.rows.should.be.a('array');
+        res.body.rows.should.have.lengthOf(3);
+        done();
+      });
+    });
+
+    it('should return all roles with pagination meta data', (done) => {
+      chai.request(app)
+      .get('/roles')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.pagination.should.have.property('page_count').eql(1);
+        res.body.pagination.should.have.property('page').eql(1);
+        res.body.pagination.should.have.property('page_size').eql(3);
+        res.body.pagination.should.have.property('total_count').eql(3);
         done();
       });
     });
@@ -163,11 +175,10 @@ describe('Role controller', () => {
       .query({ limit: 2 })
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.data.should.be.a('object');
-        res.body.data.should.have.property('count').eql(3);
-        res.body.data.should.have.property('pagination');
-        res.body.data.rows.should.be.a('array');
-        res.body.data.rows.should.have.lengthOf(2);
+        res.body.should.be.a('object');
+        res.body.should.have.property('pagination');
+        res.body.rows.should.be.a('array');
+        res.body.rows.should.have.lengthOf(2);
         done();
       });
     });
@@ -179,11 +190,10 @@ describe('Role controller', () => {
       .query({ limit: 2, offset: 2 })
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.data.should.be.a('object');
-        res.body.data.should.have.property('count').eql(3);
-        res.body.data.should.have.property('pagination');
-        res.body.data.rows.should.be.a('array');
-        res.body.data.rows.should.have.lengthOf(1);
+        res.body.should.be.a('object');
+        res.body.should.have.property('pagination');
+        res.body.rows.should.be.a('array');
+        res.body.rows.should.have.lengthOf(1);
         done();
       });
     });
@@ -195,11 +205,10 @@ describe('Role controller', () => {
       .query({ search: 'admin' })
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.data.should.be.a('object');
-        res.body.data.should.have.property('count').eql(1);
-        res.body.data.should.have.property('pagination');
-        res.body.data.rows.should.be.a('array');
-        res.body.data.rows.should.have.lengthOf(1);
+        res.body.should.be.a('object');
+        res.body.should.have.property('pagination');
+        res.body.rows.should.be.a('array');
+        res.body.rows.should.have.lengthOf(1);
         done();
       });
     });

@@ -40,8 +40,8 @@ class UserController {
     const query = Query.roleQuery(req);
     Role.findAndCountAll(query)
     .then((roles) => {
+      roles.pagination = Helpers.pagination(roles, query);
       delete roles.count;
-      roles.pagination = Helpers.pagination(roles.count, query);
       Response.success(res, roles);
     })
     .catch(err => Response.serverError(res, err.message));

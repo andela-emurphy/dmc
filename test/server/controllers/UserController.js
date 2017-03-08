@@ -25,14 +25,14 @@ describe('User controller', () => {
             password: '12345678'
           })
           .then((res) => {
-            token = res.body.data.token;
+            token = res.body.token;
             chai.request(app)
               .post('/users/login')
               .send({
                 username: 'dadmin',
                 password: '12345678'
               }).then((res) => {
-                adminToken = res.body.data.token;
+                adminToken = res.body.token;
                 done();
               });
           });
@@ -57,12 +57,11 @@ describe('User controller', () => {
         })
         .end((err, res) => {
           res.should.have.status(201);
-          res.body.data.should.be.a('object');
-          res.body.should.have.property('message');
-          res.body.data.should.have.property('username').eql('enahomurphy');
-          res.body.data.should.have.property('firstname').eql('enaho');
-          res.body.data.should.have.property('lastname').eql('murphy');
-          res.body.data.should.have.property('email').eql('test@test.com');
+          res.body.should.be.a('object');
+          res.body.should.have.property('username').eql('enahomurphy');
+          res.body.should.have.property('firstname').eql('enaho');
+          res.body.should.have.property('lastname').eql('murphy');
+          res.body.should.have.property('email').eql('test@test.com');
           done();
         });
     });
@@ -93,12 +92,12 @@ describe('User controller', () => {
       .get('/users/400')
       .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
-        res.body.data.should.be.a('object');
-        res.body.data.should.have.property('id').eql(400);
-        res.body.data.should.have.property('username').eql('mimi');
-        res.body.data.should.have.property('firstname').eql('enaho');
-        res.body.data.should.have.property('lastname').eql('murphy');
-        res.body.data.should.have.property('role').eql('regular');
+        res.body.should.be.a('object');
+        res.body.should.have.property('id').eql(400);
+        res.body.should.have.property('username').eql('mimi');
+        res.body.should.have.property('firstname').eql('enaho');
+        res.body.should.have.property('lastname').eql('murphy');
+        res.body.should.have.property('role').eql('regular');
         done();
       });
     });
@@ -108,12 +107,12 @@ describe('User controller', () => {
         .get('/users/55')
         .set('Authorization', `Bearer ${adminToken}`)
         .end((err, res) => {
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('id').eql(55);
-          res.body.data.should.have.property('username').eql('enahomurphy');
-          res.body.data.should.have.property('firstname').eql('enaho');
-          res.body.data.should.have.property('lastname').eql('murphy');
-          res.body.data.should.have.property('email').eql('test@test.com');
+          res.body.should.be.a('object');
+          res.body.should.have.property('id').eql(55);
+          res.body.should.have.property('username').eql('enahomurphy');
+          res.body.should.have.property('firstname').eql('enaho');
+          res.body.should.have.property('lastname').eql('murphy');
+          res.body.should.have.property('email').eql('test@test.com');
           done();
         });
     });
@@ -163,11 +162,10 @@ describe('User controller', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.data.should.be.a('object');
-        res.body.data.should.have.property('count');
-        res.body.data.should.have.property('pagination');
-        res.body.data.rows.should.be.a('array');
-        res.body.data.rows.should.have.lengthOf(4);
+        res.body.should.be.a('object');
+        res.body.should.have.property('pagination');
+        res.body.rows.should.be.a('array');
+        res.body.rows.should.have.lengthOf(4);
         done();
       });
     });
@@ -179,11 +177,10 @@ describe('User controller', () => {
       .query({ limit: 2 })
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.data.should.be.a('object');
-        res.body.data.should.have.property('count');
-        res.body.data.should.have.property('pagination');
-        res.body.data.rows.should.be.a('array');
-        res.body.data.rows.should.have.lengthOf(2);
+        res.body.should.be.a('object');
+        res.body.should.have.property('pagination');
+        res.body.rows.should.be.a('array');
+        res.body.rows.should.have.lengthOf(2);
         done();
       });
     });
@@ -195,11 +192,10 @@ describe('User controller', () => {
       .query({ limit: 3, offset: 3 })
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.data.should.be.a('object');
-        res.body.data.should.have.property('count').eql(4);
-        res.body.data.should.have.property('pagination');
-        res.body.data.rows.should.be.a('array');
-        res.body.data.rows.should.have.lengthOf(1);
+        res.body.should.be.a('object');
+        res.body.should.have.property('pagination');
+        res.body.rows.should.be.a('array');
+        res.body.rows.should.have.lengthOf(1);
         done();
       });
     });
@@ -211,11 +207,10 @@ describe('User controller', () => {
       .query({ search: 'murphy' })
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.data.should.be.a('object');
-        res.body.data.should.have.property('count').eql(3);
-        res.body.data.should.have.property('pagination');
-        res.body.data.rows.should.be.a('array');
-        res.body.data.rows.should.have.lengthOf(3);
+        res.body.should.be.a('object');
+        res.body.should.have.property('pagination');
+        res.body.rows.should.be.a('array');
+        res.body.rows.should.have.lengthOf(3);
         done();
       });
     });
@@ -246,7 +241,7 @@ describe('User controller', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.should.have.property('message').eql('user updated');
+        res.body.should.have.property('message').eql('User updated');
         done();
       });
     });
@@ -261,7 +256,7 @@ describe('User controller', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.should.have.property('message').eql('user updated');
+        res.body.should.have.property('message').eql('User updated');
         done();
       });
     });
@@ -303,7 +298,7 @@ describe('User controller', () => {
             password: 'goldetulip'
           })
           .then((res) => {
-            deleteToken = res.body.data.token;
+            deleteToken = res.body.token;
             done();
           })
         .catch((err) => { throw err; });

@@ -25,7 +25,7 @@ describe('Authentication Middleware', () => {
             password: '12345678'
           })
           .then((res) => {
-            token = res.body.data.token;
+            token = res.body.token;
             done();
           });
       });
@@ -66,8 +66,7 @@ describe('Authentication Middleware', () => {
       .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.should.have.property('message')
-          .eql('You have been logged out');
+        res.body.should.eql('You have been logged out');
         done();
       });
   });

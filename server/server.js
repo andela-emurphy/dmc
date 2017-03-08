@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 routes(Express, app);
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 
 db.sequelize.sync()
   .then(() => {

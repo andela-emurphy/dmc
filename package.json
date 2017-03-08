@@ -7,7 +7,7 @@
     "start": "node es5/server.js",
     "prestart": "npm install",
     "production": "node_modules/.bin/gulp babel && npm start",
-    "babel-node": "nodemon --exec node_modules/.bin/babel-node  server/server.js",
+    "babel-node": "cross-env PORT=4000 nodemon --exec node_modules/.bin/babel-node  server/server.js",
     "build": "gulp babel",
     "coveralls": "npm run coverage -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "lint": "node_modules/.bin/eslint app/** test/** ",

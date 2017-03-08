@@ -27,20 +27,20 @@ describe('Document controller', () => {
             password: '12345678'
           })
           .then((res) => {
-            token = res.body.data.token;
+            token = res.body.token;
             chai.request(app)
               .post('/users/login')
               .send({
                 username: 'dadmin',
                 password: '12345678'
               }).then((res) => {
-                adminToken = res.body.data.token;
+                adminToken = res.body.token;
                 done();
               });
           });
         });
       });
-    });
+    }).catch((a) => { throw a; });
   });
 
   after((done) => {
@@ -54,11 +54,26 @@ describe('Document controller', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('count').eql(5);
-          res.body.data.should.have.property('pagination');
-          res.body.data.rows.should.be.a('array');
-          res.body.data.rows.should.have.lengthOf(5);
+          res.body.should.be.a('object');
+          res.body.should.have.property('pagination');
+          res.body.rows.should.be.a('array');
+          res.body.rows.should.have.lengthOf(5);
+          done();
+        });
+    });
+
+    it('get all document should return pagination meta data', (done) => {
+      chai.request(app)
+        .get('/documents')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a('object');
+          res.body.should.have.property('pagination');
+          res.body.pagination.should.have.property('page_count').eql(1);
+          res.body.pagination.should.have.property('page').eql(1);
+          res.body.pagination.should.have.property('page_size').eql(5);
+          res.body.pagination.should.have.property('total_count').eql(5);
           done();
         });
     });
@@ -70,42 +85,40 @@ describe('Document controller', () => {
         .query({ limit: 1 })
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('pagination');
-          res.body.data.rows.should.be.a('array');
-          res.body.data.rows.should.have.lengthOf(1);
+          res.body.should.be.a('object');
+          res.body.should.have.property('pagination');
+          res.body.rows.should.be.a('array');
+          res.body.rows.should.have.lengthOf(1);
           done();
         });
     });
 
-    it('should return one document for limit 1 offset 1', (done) => {
+    it('should return three document for limit 3 offset 2', (done) => {
       chai.request(app)
         .get('/documents')
         .set('Authorization', `Bearer ${adminToken}`)
         .query({ limit: 3, offset: 2 })
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('count').eql(5);
-          res.body.data.should.have.property('pagination');
-          res.body.data.rows.should.be.a('array');
-          res.body.data.rows.should.have.lengthOf(3);
+          res.body.should.be.a('object');
+          res.body.should.have.property('pagination');
+          res.body.rows.should.be.a('array');
+          res.body.rows.should.have.lengthOf(3);
           done();
         });
     });
 
-    it('should return one document for query 1', (done) => {
+    it('should return one document for query the', (done) => {
       chai.request(app)
         .get('/documents')
         .set('Authorization', `Bearer ${adminToken}`)
         .query({ search: 'the' })
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('count').eql(3);
-          res.body.data.should.have.property('pagination');
-          res.body.data.rows.should.be.a('array');
-          res.body.data.rows.should.have.lengthOf(3);
+          res.body.should.be.a('object');
+          res.body.should.have.property('pagination');
+          res.body.rows.should.be.a('array');
+          res.body.rows.should.have.lengthOf(3);
           done();
         });
     });
@@ -117,27 +130,10 @@ describe('Document controller', () => {
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('count').eql(3);
-          res.body.data.should.have.property('pagination');
-          res.body.data.rows.should.be.a('array');
-          res.body.data.rows.should.have.lengthOf(3);
-          done();
-        });
-      });
-
-    it('should return all documents if user is an admin',
-      (done) => {
-        chai.request(app)
-        .get('/documents')
-        .set('Authorization', `Bearer ${adminToken}`)
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('count').eql(5);
-          res.body.data.should.have.property('pagination');
-          res.body.data.rows.should.be.a('array');
-          res.body.data.rows.should.have.lengthOf(5);
+          res.body.should.be.a('object');
+          res.body.should.have.property('pagination');
+          res.body.rows.should.be.a('array');
+          res.body.rows.should.have.lengthOf(3);
           done();
         });
       });
@@ -150,72 +146,95 @@ describe('Document controller', () => {
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('id').to.eql(2);
-          res.body.data.should.have.property('ownerId').to.eql(400);
-          res.body.data.should.have.property('title').to
+          res.body.should.be.a('object');
+          res.body.should.have.property('id').to.eql(2);
+          res.body.should.have.property('ownerId').to.eql(400);
+          res.body.should.have.property('title').to
             .eql('The new Epic movie');
-          res.body.data.should.have.property('content').to
+          res.body.should.have.property('content').to
             .eql('It is a wonderful movie');
-          res.body.data.should.have.property('public').to.eql(1);
-          res.body.data.should.have.property('editable').to.eql(0);
+          res.body.should.have.property('access').to.eql('private');
           done();
         });
     });
 
-    it('should get any document if user is admin', (done) => {
+    it('should get any document if user is an admin', (done) => {
       chai.request(app)
         .get('/documents/3')
         .set('Authorization', `Bearer ${adminToken}`)
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('id').to.eql(3);
-          res.body.data.should.have.property('ownerId').to.eql(401);
-          res.body.data.should.have.property('title').to
+          res.body.should.be.a('object');
+          res.body.should.have.property('id').to.eql(3);
+          res.body.should.have.property('ownerId').to.eql(401);
+          res.body.should.have.property('title').to
             .eql('The hunger games');
-          res.body.data.should.have.property('content').to
+          res.body.should.have.property('content').to
             .eql('here is an environment for verse Whose features');
-          res.body.data.should.have.property('public').to.eql(0);
-          res.body.data.should.have.property('editable').to.eql(1);
+          res.body.should.have.property('access').to.eql('private');
           done();
         });
     });
 
-    it('should get document if its public for authenticated user',
+    it('should get document if its public',
       (done) => {
         chai.request(app)
         .get('/documents/4')
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('ownerId').to
+          res.body.should.be.a('object');
+          res.body.should.have.property('ownerId').to
             .eql(1);
-          res.body.data.should.have.property('title').to
+          res.body.should.have.property('title').to
             .eql('Journey to the center of he earth');
-          res.body.data.should.have.property('content').to
+          res.body.should.have.property('content').to
             .eql('here is an environment for verse Whose features');
-          res.body.data.should.have.property('ownerId').to.eql(1);
-          res.body.data.should.have.property('public').to.eql(1);
-          res.body.data.should.have.property('editable').to.eql(0);
+          res.body.should.have.property('ownerId').to.eql(1);
+          res.body.should.have.property('access').to.eql('public');
           done();
         });
       });
   });
 
   describe('Get user document', () => {
-    it('should get all user document', (done) => {
+    it('should get all document that belongs to a user', (done) => {
       chai.request(app)
         .get('/users/400/documents')
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.data.should.be.a('array');
-          res.body.data.should.have.lengthOf(2);
+          res.body.should.be.a('array');
+          res.body.should.have.lengthOf(2);
           done();
         });
     });
+
+    it('should returns a 403 if user true to access another user document',
+      (done) => {
+        chai.request(app)
+        .get('/users/401/documents')
+        .set('Authorization', `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(403);
+          res.body.should.have.property('message')
+            .eql('Forbidden! you cannot access this route');
+          done();
+        });
+      });
+
+    it('should returns all user document if query is from admin',
+      (done) => {
+        chai.request(app)
+        .get('/users/400/documents')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a('array');
+          res.body.should.have.lengthOf(2);
+          done();
+        });
+      });
   });
 
   describe('Create a document', () => {
@@ -233,13 +252,12 @@ describe('Document controller', () => {
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           res.should.has.status(201);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('title')
+          res.body.should.be.a('object');
+          res.body.should.have.property('title')
             .to.eql('Just another book');
-          res.body.data.should.have.property('content')
+          res.body.should.have.property('content')
             .to.eql('this is a new document');
-          res.body.data.should.have.property('editable').to.eql(0);
-          res.body.data.should.have.property('public').to.eql(1);
+          res.body.should.have.property('access').to.eql('private');
           done();
         });
     });
@@ -268,7 +286,7 @@ describe('Document controller', () => {
           username: 'anita',
           password: '12345678'
         }).then((res) => {
-          anitaToken = res.body.data.token;
+          anitaToken = res.body.token;
           done();
         });
     });
@@ -279,19 +297,18 @@ describe('Document controller', () => {
         .send({
           title: 'a changed title',
           content: 'i got changed',
-          public: 0,
+          access: 'private',
           editable: 1,
         })
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           res.should.has.status(200);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('title')
+          res.body.should.be.a('object');
+          res.body.document.should.have.property('title')
             .to.eql('a changed title');
-          res.body.data.should.have.property('content')
+          res.body.document.should.have.property('content')
             .to.eql('i got changed');
-          res.body.data.should.have.property('editable').to.eql(1);
-          res.body.data.should.have.property('public').to.eql(0);
+          res.body.document.should.have.property('access').to.eql('private');
           done();
         });
     });
@@ -309,13 +326,12 @@ describe('Document controller', () => {
         .set('Authorization', `Bearer ${adminToken}`)
         .end((err, res) => {
           res.should.has.status(200);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('title')
+          res.body.should.be.a('object');
+          res.body.document.should.have.property('title')
             .to.eql('godspeed');
-          res.body.data.should.have.property('content')
+          res.body.document.should.have.property('content')
             .to.eql('the chronicle of godspeed');
-          res.body.data.should.have.property('editable').to.eql(0);
-          res.body.data.should.have.property('public').to.eql(0);
+          res.body.document.should.have.property('access').to.eql('private');
           done();
         });
     });
@@ -330,55 +346,46 @@ describe('Document controller', () => {
           .set('Authorization', `Bearer ${token}`)
           .end((err, res) => {
             res.should.has.status(200);
-            res.body.data.should.be.a('object');
-            res.body.data.should.have.property('title')
+            res.body.should.be.a('object');
+            res.body.document.should.have.property('title')
               .to.eql('Just another book');
-            res.body.data.should.have.property('content')
+            res.body.document.should.have.property('content')
               .to.eql('the chronicle of godspeed');
-            res.body.data.should.have.property('editable').to.eql(0);
-            res.body.data.should.have.property('public').to.eql(0);
+            res.body.document.should.have.property('access').to.eql('private');
             done();
           });
       });
-
-    it(`should return a 403 if another user tries to change 
-      the isEditable status`, (done) => {
-      chai.request(app)
-        .put('/documents/2')
-        .send({
-          id: 7,
-          title: 'a changed title',
-          content: 'i got changed',
-          ownerId: 400,
-          public: 0,
-          editable: 1,
-        })
-        .set('Authorization', `Bearer ${anitaToken}`)
-        .end((err, res) => {
-          res.should.has.status(403);
-          res.body.should.have.property('status').to.eql(false);
-          res.body.message.should
-            .eql('Forbidden, you cannot edit this document');
-          done();
-        });
-    });
 
     it('should return a 400 status if an invalid data is sent', (done) => {
       chai.request(app)
         .put('/documents/2')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          public: null,
-          editable: 1,
+          title: null
         })
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           res.should.have.status(400);
-          res.body.should.have.property('status').to.eql(false);
-          res.body.message[0].should.eql('public cannot be null');
+          res.body.message[0].should.eql('title cannot be null');
           done();
         });
     });
+
+    it('should return a 403 if a user tries to update another user document',
+      (done) => {
+        chai.request(app)
+          .put('/documents/2')
+          .set('Authorization', `Bearer ${anitaToken}`)
+          .send({
+            title: 'i want to change this'
+          })
+          .end((err, res) => {
+            res.should.have.status(403);
+            res.body.message.should
+              .eql('Forbidden! you cannot access this document');
+            done();
+          });
+      });
   });
 
   describe('Delete documents', () => {
@@ -390,55 +397,43 @@ describe('Document controller', () => {
           username: 'anita',
           password: '12345678'
         }).then((res) => {
-          anitaToken = res.body.data.token;
+          anitaToken = res.body.token;
           done();
         });
     });
 
-    it('should delete a document if user owns the document', (done) => {
+    it('should return a 200 when user deletes his/her document', (done) => {
       chai.request(app)
         .delete('/documents/5')
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           res.should.has.status(200);
           res.body.should.has.property('message').to.eql('Document deleted');
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('title')
-            .to.eql('Goku vs Saitama death match');
-          res.body.data.should.have.property('content')
-            .to.eql('Goku ends up dieing lol');
-          res.body.data.should.have.property('editable').to.eql(0);
-          res.body.data.should.have.property('public').to.eql(0);
           done();
         });
     });
 
     it('should return a 404 for document not found', (done) => {
       chai.request(app)
-        .delete('/documents/5')
+        .delete('/documents/7677')
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
           res.should.has.status(404);
           res.body.should.be.a('object');
           res.body.should.have.property('message')
-            .to.eql('Document with id 5 not found');
+            .to.eql('Document with id 7677 not found');
           done();
         });
     });
 
-    it('should delete any document if user is admin', (done) => {
+    it('should  a 200 when admin deletes document', (done) => {
       chai.request(app)
         .delete('/documents/3')
         .set('Authorization', `Bearer ${adminToken}`)
         .end((err, res) => {
           res.should.has.status(200);
-          res.body.data.should.be.a('object');
-          res.body.data.should.have.property('title')
-            .to.eql('The hunger games');
-          res.body.data.should.have.property('content')
-            .to.eql('here is an environment for verse Whose features');
-          res.body.data.should.have.property('editable').to.eql(1);
-          res.body.data.should.have.property('public').to.eql(0);
+          res.body.should.be.a('object');
+          res.body.should.has.property('message').to.eql('Document deleted');
           done();
         });
     });
@@ -449,9 +444,8 @@ describe('Document controller', () => {
         .set('Authorization', `Bearer ${anitaToken}`)
         .end((err, res) => {
           res.should.has.status(403);
-          res.body.should.have.property('status').to.eql(false);
           res.body.message.should
-            .eql('Forbidden! you can\'t delete this document');
+            .eql('Forbidden! you cannot access this document');
           done();
         });
     });

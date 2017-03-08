@@ -55,7 +55,8 @@ module.exports = {
       updatedAt: new Date()
     }]];
 
-    return queryInterface.bulkInsert('Users', users, { returning: true, validate: true });
+    return queryInterface
+      .bulkInsert('Users', users, { returning: true, validate: true });
   },
 
   down(queryInterface) {

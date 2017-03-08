@@ -1,4 +1,3 @@
-import _ from 'underscore';
 
 /**
   * Access class
@@ -13,42 +12,32 @@ class Access {
   * @description checks if user making that
   * request is an admin
   * @param  {Object} req - request object
-  * @param  {Object} type - request object
   * @param  {Object} message - request object
   * @returns {Promise}  returns a promise
   */
-  static docAccess(req, type = 'public', message) {
+  static docAccess(req, message) {
     const doc = req.doc;
+    const user = req.user;
     return new Promise((resolve, reject) => {
-      const user = req.user;
-      switch (type) {
-      case 'public':
-        if (user.role === 'admin' || doc.public === 1 ||
-             doc.ownerId === user.sub) {
-          return resolve(req);
-        }
-        return reject({ message: message ||
-            'Forbidden! this document is private' });
-
-      case 'delete':
+      switch (doc.access) {
+      case 'private':
         if (user.role === 'admin' || user.sub === doc.ownerId) {
           return resolve(req);
         }
         return reject({ message: message ||
-            'Forbidden! you can\'t delete this document' });
-      case 'editable':
-        if (user.role === 'admin' || doc.ownerId === req.user.sub) {
-          return resolve(req);
-        }
-        if (doc.editable === 1 && doc.public === 1) {
-          req.body = _.pick(req.body, ['title', 'content']);
-          return resolve(req);
+          'Forbidden! this document is private' });
+      case 'public':
+        return resolve(req);
+      case 'role':
+        if (user.role === 'admin' || user.sub === doc.ownerId ||
+          doc.user.role === user.role) {
+          resolve(req);
         }
         return reject({ message: message ||
-            'Forbidden! this document is not editable' });
+              'Forbidden! this document is private' });
       default:
         return reject({ message: message ||
-            'Forbidden! this document is private' });
+              'Forbidden! this document is private' });
       }
     });
   }

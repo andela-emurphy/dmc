@@ -43,7 +43,7 @@ export default class DocumentController extends Response {
    * @return {Object} response
    */
   static get(req, res) {
-    Helpers.docAccess(req, 'public')
+    Helpers.docAccess(req)
       .then(() => Response.success(res, req.doc))
       .catch(err => Response.unAuthorize(res, err.message));
   }
@@ -78,15 +78,11 @@ export default class DocumentController extends Response {
    * @return {Object} response
    */
   static update(req, res) {
-    Helpers.docAccess(req, 'editable',
-    'Forbidden, you cannot edit this document')
-      .then((request) => {
-        req.doc.update(request.body)
-        .then(() => Response.success(res, { message: 'Document updated' }))
-        .catch(error => Response
-          .badRequest(res, Helpers.errorHandler(error.errors)));
-      })
-      .catch(err => Response.forbidden(res, err.message));
+    req.doc.update(req.body)
+      .then(document => Response
+        .success(res, { message: 'Document updated', document }))
+      .catch(error => Response
+      .badRequest(res, Helpers.errorHandler(error.errors)));
   }
 
   /**
