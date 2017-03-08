@@ -15,20 +15,17 @@ module.exports = {
       },
       ownerId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         allowNull: false,
         references: {
           model: 'Users',
-          key: 'id'
+          key: 'id',
         }
       },
-      public: {
-        type: Sequelize.INTEGER,
-        values: [0, 1, 'role'],
-        defaultValue: 0
-      },
-      editable: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0
+      access: {
+        type: Sequelize.STRING,
+        values: ['public', 'private', 'role'],
+        defaultValue: 'private'
       },
       createdAt: {
         type: Sequelize.DATE,

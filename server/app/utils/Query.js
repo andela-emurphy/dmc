@@ -61,7 +61,7 @@ class Query {
       .catch(err => Response.serverError(res, err.message));
   }
 
-    /**
+  /**
   * docQuery
   * @description sets up document query
   * when a user tries to get all document
@@ -71,12 +71,12 @@ class Query {
   */
   static docQuery(req) {
     const role = req.user.role;
-    const search = req.query;
+    const terms = req.query;
     const query = {};
     const searchQuery = [{ title: { $ilike: `%${req.query.search}%` } },
         { content: { $ilike: `%${req.query.search}%` } }];
     if (role === 'admin') {
-      query.where = search.search ? { $or: searchQuery } : {};
+      query.where = terms.search ? { $or: searchQuery } : {};
     } else {
       query.where = {
         $or: [
@@ -85,12 +85,12 @@ class Query {
         ]
       };
     }
-    if (search.search && role !== 'admin') {
+    if (terms.search && role !== 'admin') {
       query.where.$or.push(searchQuery);
     }
-    search.limit = parseInt(search.limit || 10, 10);
-    query.limit = (!search.limit || search.limit > 10) ? 10 : search.limit;
-    query.offset = search.offset ? search.offset : 0;
+    terms.limit = parseInt(terms.limit || 10, 10);
+    query.limit = (!terms.limit || terms.limit < 0) ? 10 : terms.limit;
+    query.offset = (!terms.offset || terms.offset < 0) ? 0 : terms.offset;
     return query;
   }
 
@@ -103,22 +103,22 @@ class Query {
   * @returns {object}  returns a query object
   */
   static userQuery(req) {
-    const search = req.query;
+    const terms = req.query;
     let query = { };
     if (req.query.search) {
       query = {
         where: {
           $or: [
-            { firstname: { $ilike: `%${req.query.search}%` } },
-            { lastname: { $ilike: `%${req.query.search}%` } },
-            { username: { $ilike: `%${req.query.search}%` } }
+            { firstname: { $ilike: `%${terms.search}%` } },
+            { lastname: { $ilike: `%${terms.search}%` } },
+            { username: { $ilike: `%${terms.search}%` } }
           ]
         }
       };
     }
-    search.limit = parseInt(search.limit || 10, 10);
-    query.limit = (!search.limit || search.limit > 10) ? 10 : search.limit;
-    query.offset = search.offset ? search.offset : 0;
+    terms.limit = parseInt(terms.limit || 10, 10);
+    query.limit = (!terms.limit || terms.limit < 0) ? 10 : terms.limit;
+    query.offset = (!terms.offset || terms.offset < 0) ? 0 : terms.offset;
     query.attributes = ['id', 'username',
       'firstname', 'lastname', 'email', 'role'];
     return query;
@@ -133,21 +133,20 @@ class Query {
   * @returns {object}  returns a query object
   */
   static roleQuery(req) {
-    const search = req.query;
+    const terms = req.query;
     let query = {};
     if (req.query.search) {
       query = {
         where: {
-          title: { $ilike: `%${search.search}%` }
+          title: { $ilike: `%${terms.search}%` }
         }
       };
     }
-    search.limit = parseInt(search.limit || 10, 10);
-    query.limit = (!search.limit || search.limit > 10) ? 10 : search.limit;
-    query.offset = search.offset ? search.offset : 0;
+    terms.limit = parseInt(terms.limit || 10, 10);
+    query.limit = (!terms.limit || terms.limit < 0) ? 10 : terms.limit;
+    query.offset = (!terms.offset || terms.offset < 0) ? 0 : terms.offset;
     return query;
   }
-
 }
 
 export default Query;

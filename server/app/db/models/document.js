@@ -18,22 +18,17 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    public: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0
+    access: {
+      type: DataTypes.STRING,
+      values: ['public', 'private', 'role'],
+      defaultValue: 'private'
     },
-    editable: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0
-    }
   }, {
     classMethods: {
       associate: (models) => {
         Document.belongsTo(models.User, {
           foreignKey: 'ownerId',
-          onDelete: 'CASCADE'
+          onDelete: 'cascade'
         });
       }
     }

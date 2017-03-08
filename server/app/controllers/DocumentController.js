@@ -24,8 +24,9 @@ export default class DocumentController extends Response {
     const query = Query.docQuery(req);
     Document.findAndCountAll(query)
       .then((data) => {
-        data.pagination = Helpers.pagination(data.count, query);
-        Response.success(res, data, 'query successful');
+        data.pagination = Helpers.pagination(data, query);
+        delete data.count;
+        Response.success(res, data);
       })
       .catch(err => Response.serverError(res, err.message));
   }
@@ -43,7 +44,7 @@ export default class DocumentController extends Response {
    */
   static get(req, res) {
     Helpers.docAccess(req, 'public')
-      .then(() => Response.success(res, req.doc, 'document found'))
+      .then(() => Response.success(res, req.doc))
       .catch(err => Response.unAuthorize(res, err.message));
   }
 
@@ -81,7 +82,7 @@ export default class DocumentController extends Response {
     'Forbidden, you cannot edit this document')
       .then((request) => {
         req.doc.update(request.body)
-        .then(data => Response.success(res, data, 'Document updated'))
+        .then(() => Response.success(res, { message: 'Document updated' }))
         .catch(error => Response
           .badRequest(res, Helpers.errorHandler(error.errors)));
       })
@@ -101,7 +102,7 @@ export default class DocumentController extends Response {
     Helpers.docAccess(req, 'delete')
     .then(() => {
       req.doc.destroy()
-      .then(() => Response.success(res, req.doc, 'Document deleted'));
+      .then(() => Response.success(res, { message: 'Document deleted' }));
     }).catch(err => Response.forbidden(res, err.message));
   }
 }

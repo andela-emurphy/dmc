@@ -89,7 +89,7 @@ export default (sequelize, DataTypes) => {
       associate: (models) => {
         User.hasMany(models.Document, {
           foreignKey: 'ownerId',
-          onDelete: 'CASCADE',
+          onDelete: 'cascade'
         });
         User.belongsTo(models.Role, {
           foreignKey: 'role'

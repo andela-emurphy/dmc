@@ -31,6 +31,8 @@ module.exports = {
       },
       role: {
         type: Sequelize.STRING,
+        allowNull: false,
+        onUpdate: 'CASCADE',
         defaultValue: 'regular',
         references: {
           model: 'Roles',

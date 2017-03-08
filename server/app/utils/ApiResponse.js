@@ -45,13 +45,9 @@ export default class Response {
    * @param {String} message - message about response
    * @returns {Object}  response to be sent to client
    */
-  static success(res, data = [], message = null) {
+  static success(res, data = []) {
     return this.setStatus(200)
-      .respond(res, {
-        status: true,
-        message,
-        data
-      });
+      .respond(res, data);
   }
 
   /**
@@ -63,7 +59,6 @@ export default class Response {
   static notFound(res, message) {
     return this.setStatus(404)
       .respond(res, {
-        status: false,
         message
       });
   }
@@ -77,7 +72,6 @@ export default class Response {
   static serverError(res, message) {
     return this.setStatus(500)
       .respond(res, {
-        status: false,
         message
       });
   }
@@ -91,7 +85,6 @@ export default class Response {
   static badRequest(res, message) {
     return this.setStatus(400)
       .respond(res, {
-        status: false,
         message
       });
   }
@@ -105,7 +98,6 @@ export default class Response {
   static unAuthorize(res, message) {
     return this.setStatus(401)
       .respond(res, {
-        status: false,
         message
       });
   }
@@ -132,12 +124,8 @@ export default class Response {
    * @param {String} message - message about response
    * @returns {Object}  response to be sent to client
    */
-  static created(res, data, message = null) {
+  static created(res, data) {
     return this.setStatus(201)
-      .respond(res, {
-        status: true,
-        message: message || 'Resource created',
-        data
-      });
+      .respond(res, data);
   }
 }

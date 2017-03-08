@@ -39,9 +39,10 @@ class UserController {
   static getAll(req, res) {
     const query = Query.roleQuery(req);
     Role.findAndCountAll(query)
-    .then((data) => {
-      data.pagination = Helpers.pagination(data.count, query);
-      Response.success(res, data, 'query successful');
+    .then((roles) => {
+      delete roles.count;
+      roles.pagination = Helpers.pagination(roles.count, query);
+      Response.success(res, roles);
     })
     .catch(err => Response.serverError(res, err.message));
   }
@@ -63,7 +64,7 @@ class UserController {
       if (!role) {
         return Response.notFound(res, `role with title ${title} not found`);
       }
-      Response.success(res, role, 'query successful');
+      Response.success(res, role);
     })
     .catch(err => Response.serverError(res, err.message));
   }

@@ -57,21 +57,18 @@ class Access {
    * Pagination
    * @description sets up pagination for
    * data queries that requires all resource
-   * @param {Object} count data count
+   * @param {Object} data data count
    * @param {Object} query user query
    * @returns {Object} return an object
    */
-  static pagination(count, query) {
-    const limit = parseInt(query.limit, 10);
-    const offset = parseInt(query.offset, 10);
-    const next = Math.ceil(count / limit);
-    const currentPage = Math.floor((offset / limit) + 1);
+  static pagination(data, query) {
+    const next = Math.ceil(data.count / query.limit);
+    const currentPage = Math.floor((query.offset / query.limit) + 1);
     return {
-      next_offset: limit + offset,
       page_count: next,
-      Page: currentPage,
-      page_size: query.limit,
-      total_count: count
+      page: currentPage,
+      page_size: data.rows.length,
+      total_count: data.count
     };
   }
 

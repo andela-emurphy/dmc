@@ -40,9 +40,10 @@ class UserController {
   static getAll(req, res) {
     const query = Query.userQuery(req);
     User.findAndCountAll(query)
-    .then((data) => {
-      data.pagination = Helpers.pagination(data.count, query);
-      Response.success(res, data, 'query successful');
+    .then((users) => {
+      users.pagination = Helpers.pagination(users, query);
+      delete users.count;
+      Response.success(res, users);
     })
     .catch(err => Response.serverError(res, err.message));
   }
@@ -57,7 +58,7 @@ class UserController {
   */
   static get(req, res) {
     const user = req.user.cursor;
-    Response.success(res, user.toPublicJson(), 'query successful');
+    Response.success(res, user.toPublicJson());
   }
 
   /**
@@ -71,13 +72,16 @@ class UserController {
   static update(req, res) {
     const body = _.pick(req.body, ['firstname', 'lastname',
       'email', 'password', 'username']);
-    if (req.user.cursor.role !== 'admin' && req.user.cursor.id !== 1) {
+    if (req.user.role === 'admin' && req.user.cursor.id !== 1) {
       body.role = req.body.role || req.user.cursor.role;
     }
     req.user.cursor.update(body)
-      .then(data => Response.success(res, data.toPublicJson, 'user updated'))
+      .then(user => Response.success(res, {
+        message: 'User updated',
+        user: user.toPublicJson()
+      }))
       .catch(error => Response
-        .badRequest(res, Helpers.errorHandler(error.errors)));
+        .badRequest(res, (error.message)));
   }
 
   /**
@@ -104,7 +108,7 @@ class UserController {
     const query = Query.docQuery(req);
     req.user.cursor.getDocuments(query)
       .then((data) => {
-        Response.success(res, data, 'query successful');
+        Response.success(res, data);
       })
     .catch(err => Response.server(res, err.message));
   }
