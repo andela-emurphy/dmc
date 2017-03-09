@@ -34,26 +34,27 @@ describe('Authentication controller', () => {
     db.sequelize.sync({ force: true }).then(() => done());
   });
   describe('Login user', () => {
-    it('Should login user and return a token', (done) => {
-      chai.request(app)
-        .post('/users/login')
-        .send({
-          username: 'dadmin',
-          password: '12345678'
-        })
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a('object');
-          res.body.should.have.property('username').eql('dadmin');
-          res.body.should.have.property('firstname').eql('uncle');
-          res.body.should.have.property('lastname').eql('uncle');
-          res.body.should.have.property('email').eql('admin@test.com');
-          res.body.should.have.property('token');
-          done();
-        });
-    });
+    it('should return status 200 and a token for valid login details ',
+      (done) => {
+        chai.request(app)
+          .post('/users/login')
+          .send({
+            username: 'dadmin',
+            password: '12345678'
+          })
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('username').eql('dadmin');
+            res.body.should.have.property('firstname').eql('uncle');
+            res.body.should.have.property('lastname').eql('uncle');
+            res.body.should.have.property('email').eql('admin@test.com');
+            res.body.should.have.property('token');
+            done();
+          });
+      });
 
-    it('Should return status 201 if no username or password sent', (done) => {
+    it('Should return status 400 if no username or password sent', (done) => {
       chai.request(app)
         .post('/users/login')
         .send({})
@@ -65,7 +66,7 @@ describe('Authentication controller', () => {
         });
     });
 
-    it('should return 400 for no login details', (done) => {
+    it('should return 400 if no login details are sent', (done) => {
       chai.request(app)
         .post('/users/login')
         .end((err, res) => {
@@ -76,7 +77,7 @@ describe('Authentication controller', () => {
         });
     });
 
-    it('should return 400 invalid username or password', (done) => {
+    it('should return 400 for invalid username or password', (done) => {
       chai.request(app)
         .post('/users/login')
         .send({

@@ -48,7 +48,7 @@ describe('Document controller', () => {
   });
 
   describe('Get all documents', () => {
-    it('should return all document if user is admin', (done) => {
+    it('should return all document if user is an admin', (done) => {
       chai.request(app)
         .get('/documents')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -93,7 +93,7 @@ describe('Document controller', () => {
         });
     });
 
-    it('should return three document for limit 3 offset 2', (done) => {
+    it('should return three documents for limit 3 offset 2', (done) => {
       chai.request(app)
         .get('/documents')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -108,7 +108,7 @@ describe('Document controller', () => {
         });
     });
 
-    it('should return one document for query the', (done) => {
+    it('should return one document for search query the', (done) => {
       chai.request(app)
         .get('/documents')
         .set('Authorization', `Bearer ${adminToken}`)
@@ -176,7 +176,7 @@ describe('Document controller', () => {
         });
     });
 
-    it('should get document if its public',
+    it('should get any document if its public',
       (done) => {
         chai.request(app)
         .get('/documents/4')
@@ -210,7 +210,7 @@ describe('Document controller', () => {
         });
     });
 
-    it('should returns a 403 if user true to access another user document',
+    it('should returns a 403 if user tries to access another user document',
       (done) => {
         chai.request(app)
         .get('/users/401/documents')
@@ -238,7 +238,7 @@ describe('Document controller', () => {
   });
 
   describe('Create a document', () => {
-    it('should create  ', (done) => {
+    it('should return 201 a new document is created  ', (done) => {
       chai.request(app)
         .post('/documents')
         .send({
@@ -413,7 +413,7 @@ describe('Document controller', () => {
         });
     });
 
-    it('should return a 404 for document not found', (done) => {
+    it('should return a 404 if document is not found', (done) => {
       chai.request(app)
         .delete('/documents/7677')
         .set('Authorization', `Bearer ${token}`)
@@ -426,7 +426,7 @@ describe('Document controller', () => {
         });
     });
 
-    it('should  a 200 when admin deletes document', (done) => {
+    it('should return status 200 when admin deletes document', (done) => {
       chai.request(app)
         .delete('/documents/3')
         .set('Authorization', `Bearer ${adminToken}`)

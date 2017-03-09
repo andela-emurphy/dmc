@@ -9,13 +9,7 @@ Document Management System provides a restful API for users to create and manage
 - Express
 - Postgresql
 - Sequelize ORM.  
-## Local Development
-### Prerequisites includes
-- [Postgresql](https://www.postgres
-- Node.js
-- Express
-- Postgresql
-- Sequelize ORM.  
+
 ## Local Development
 ### Prerequisites includes
 - [Postgresql](https://www.postgresql.org/) and
@@ -178,9 +172,8 @@ Endpoint for document API.
     "id": 45,
     "title": "Another new document",
     "content": "Test Epic things like lorem etc",
-    "public": "Public",
+    "access": "Public",
     "OwnerId": 29,
-    "editable": 1,
     "createdAt": "2017-02-17T17:40:45.146Z",
     "updatedAt": "2017-02-17T17:40:45.146Z"
   },
@@ -188,8 +181,7 @@ Endpoint for document API.
     "id": 44,
     "title": "New Title",
     "content": "The unique content of a document does not lie in the presence of the word unique",
-    "public": "1",
-    "editable": 0,
+    "access": "private",
     "OwnerId": 1,
     "createdAt": "2017-02-06T22:55:43.747Z",
     "updatedAt": "2017-02-06T22:55:43.747Z"
@@ -204,9 +196,8 @@ Endpoint for document API.
 {
   "title": "Just a Title",
   "content": "This placeholder should not always be a lorem generated document",
-  "public": "Public",
+  "access": "Public",
   "OwnerId": 29,
-  "editable": 1,
 }
 ```
 #### Response
@@ -218,8 +209,7 @@ Endpoint for document API.
   "title": "Just a Title",
   "content": "This placeholder should not always be a lorem ipsum generated document",
   "OwnerId": 1,
-  "public": 0,
-  "editable": 1,
+  "access": "private",
   "createdAt": "2017-02-05T05:51:51.217Z",
   "updatedAt": "2016-02-05T05:51:51.217Z"
 }
@@ -237,8 +227,7 @@ Endpoint for document API.
   "title": "Just a Title",
   "content": "This placeholder should not always be a lorem ipsum generated document",
   "OwnerId": 1,
-  "public": 0,
-  "editable": 1,
+  "access": "private",
   "createdAt": "2017-02-05T05:51:51.217Z",
   "updatedAt": "2016-02-05T05:51:51.217Z"
 }
@@ -262,8 +251,7 @@ Endpoint for document API.
     "title": "Updated Title",
     "content": "This placeholder should not always be a lorem ipsum generated document",
     "OwnerId": 1,
-    "public": 0,
-    "editable": 1,
+    "access": "role",
     "createdAt": "2017-02-05T05:51:51.217Z",
     "updatedAt": "2016-02-05T05:51:51.217Z"
   }
@@ -293,8 +281,7 @@ Endpoint for document API.
     "id": 45,
     "title": "Another new document",
     "content": "Test Epic things like lorem etc",
-    "public": 0,
-    "editable": 1,
+    "access": "role",
     "OwnerId": 29,
     "createdAt": "2017-02-17T17:40:45.146Z",
     "updatedAt": "2017-02-17T17:40:45.146Z"
@@ -303,8 +290,7 @@ Endpoint for document API.
     "id": 44,
     "title": "New Title",
     "content": "The unique content of a document does not lie in the presence of the word unique",
-    "public": 0,
-    "editable": 1,
+    "access": "Public",
     "OwnerId": 1,
   }]
 ```
@@ -332,3 +318,12 @@ Endpoint for document API.
   "
 }]
 ```
+
+### How to Contribute
+----------------------
+* Fork or clone the repo to your folder.
+* Change directory: cd dms
+* Run npm install
+* Create a feature branch and work on it.
+* Push to the remote branch.
+* Open a Pull Request to development branch.
