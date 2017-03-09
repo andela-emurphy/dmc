@@ -8,8 +8,8 @@ import nodemon from 'gulp-nodemon';
 const paths = {
   server: './server/**',
   client: './client',
-  es5: './es5',
-  sourceRoot: path.join(__dirname, 'es5'),
+  es5: './dist',
+  sourceRoot: path.join(__dirname, 'dist'),
   test: './test/**',
   eslint: ['server/**/*.js', 'client/**/*.js', 'test/**/**/*.js']
 };

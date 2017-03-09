@@ -4,7 +4,7 @@
   "description": "The system manages documents, users and user roles. Each document defines access rights; the document defines which roles can access it.",
   "main": "es5/server.js",
   "scripts": {
-    "start": "node es5/server.js",
+    "start": "node dist/server.js",
     "production": " node_modules/.bin/gulp babel && npm start",
     "babel-node": "cross-env DATABASE_URL=postgres://localhost/dcm cross-env PORT=4000 nodemon --exec node_modules/.bin/babel-node  server/server.js",
     "build": "gulp babel",

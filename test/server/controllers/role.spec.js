@@ -213,5 +213,42 @@ describe('Role controller', () => {
       });
     });
   });
+
+  describe('Delete role', () => {
+    it('should return 200 for deleted role', (done) => {
+      chai.request(app)
+      .delete('/roles/fellow')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.have.property('message').eql('role deleted');
+        done();
+      });
+    });
+
+    it('should return 401 if a user tries to delete admin role', (done) => {
+      chai.request(app)
+        .delete('/roles/admin')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('message')
+            .eql('Forbidden! you cannot update/delete this role');
+          done();
+        });
+    });
+
+    it('should return 401 if a user tries to delete regular role', (done) => {
+      chai.request(app)
+        .delete('/roles/regular')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('message')
+            .eql('Forbidden! you cannot update/delete this role');
+          done();
+        });
+    });
+  });
 });
 

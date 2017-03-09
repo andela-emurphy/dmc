@@ -10,3 +10,4 @@ src
 .env
 README.md
 config/dbs.js
+dist

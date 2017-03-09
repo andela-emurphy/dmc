@@ -49,6 +49,42 @@ export const userPermission = (req, res, next) => {
 };
 
 /**
+ * Role permission
+ * @description verifies user access.
+ * makes route endpoint available for
+ * admin and regular users
+ * @param  {Object} req - request object
+ * @param  {Object} res - response object
+ * @param {String}  next - callback if authentication is a success
+ * @returns {Object}  response to be sent to client
+ * */
+export const rolePermission = (req, res, next) => {
+  const title = req.params.title;
+  if (req.user.role === 'admin') {
+    if (title) {
+      db.Role.find({ where: { title } })
+    .then((role) => {
+      if (!role) {
+        return Response.notFound(res, `role with title ${title} not found`);
+      }
+      if (['admin', 'regular'].includes(title) &&
+      ['PUT', 'DELETE'].includes(req.method)) {
+        return Response
+            .forbidden(res, 'Forbidden! you cannot update/delete this role');
+      }
+      req.role = role;
+      next();
+    })
+    .catch(err => Response.serverError(res, err.message));
+    } else {
+      next();
+    }
+  } else {
+    return Response.forbidden(res, 'Forbidden! you cannot access this route');
+  }
+};
+
+/**
  * Document middleware
  * @description abstracts single document
  * query

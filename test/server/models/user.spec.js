@@ -32,23 +32,18 @@ describe('User model', () => {
         user.should.have.property('firstname').to.eql('enaho');
         user.should.have.property('lastname').to.eql('murphy');
         user.should.have.property('username').to.eql('mimi');
-        user.should.have.property('email').to
-          .eql('mimi@test.com');
-        user.should.have.property('role')
-          .to.eql('regular');
+        user.should.have.property('email').to.eql('mimi@test.com');
+        user.should.have.property('role').to.eql('regular');
         done();
       });
     });
 
     it('should throw an error if user already exist', (done) => {
-      db.User.create(userData[0])
-      .should.be.rejected.notify(done);
+      db.User.create(userData[0]).should.be.rejected.notify(done);
     });
 
     it('should throw an error any field is to field', (done) => {
-      db.User.create({
-        firstname: 'saitama'
-      })
+      db.User.create({ firstname: 'saitama' })
       .should.be.rejected.notify(done);
     });
 

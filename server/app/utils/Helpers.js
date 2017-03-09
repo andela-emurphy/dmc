@@ -24,20 +24,22 @@ class Access {
         if (user.role === 'admin' || user.sub === doc.ownerId) {
           return resolve(req);
         }
-        return reject({ message: message ||
-          'Forbidden! this document is private' });
-      case 'public':
-        return resolve(req);
+        return reject({
+          message: message || 'Forbidden! this document is private'
+        });
+      case 'public': return resolve(req);
       case 'role':
-        if (user.role === 'admin' || user.sub === doc.ownerId ||
-          doc.user.role === user.role) {
+        if (user.role === 'admin' ||
+          user.sub === doc.ownerId || doc.user.role === user.role) {
           resolve(req);
         }
-        return reject({ message: message ||
-              'Forbidden! this document is private' });
+        return reject({
+          message: message || 'Forbidden! this document is private'
+        });
       default:
-        return reject({ message: message ||
-              'Forbidden! this document is private' });
+        return reject({
+          message: message || 'Forbidden! this document is private'
+        });
       }
     });
   }
@@ -53,12 +55,14 @@ class Access {
   static pagination(data, query) {
     const next = Math.ceil(data.count / query.limit);
     const currentPage = Math.floor((query.offset / query.limit) + 1);
-    return {
+    data.pagination = {
       page_count: next,
       page: currentPage,
       page_size: data.rows.length,
       total_count: data.count
     };
+    delete data.count;
+    return data;
   }
 
    /**

@@ -40,8 +40,7 @@ class UserController {
     const query = Query.roleQuery(req);
     Role.findAndCountAll(query)
     .then((roles) => {
-      roles.pagination = Helpers.pagination(roles, query);
-      delete roles.count;
+      roles = Helpers.pagination(roles, query);
       Response.success(res, roles);
     })
     .catch(err => Response.serverError(res, err.message));
@@ -56,18 +55,23 @@ class UserController {
   * @return {Object} return
   */
   static get(req, res) {
-    const title = req.params.title;
-    Role.find({
-      where: { title }
-    })
-    .then((role) => {
-      if (!role) {
-        return Response.notFound(res, `role with title ${title} not found`);
-      }
-      Response.success(res, role);
-    })
-    .catch(err => Response.serverError(res, err.message));
+    Response.success(res, req.role);
+  }
+
+  /**
+  * Get a role
+  * @description gets a single user when GET /roles/:title
+  * endpoint is called.
+  * @param  {Object} req - request object
+  * @param  {Object} res - response object
+  * @return {Object} return
+  */
+  static delete(req, res) {
+    req.role.destroy()
+      .then(() => Response.success(res, { message: 'role deleted' }))
+      .catch(err => Response.badRequest(res, err.message));
   }
 }
+
 
 export default UserController;

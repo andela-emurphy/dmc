@@ -41,8 +41,7 @@ class UserController {
     const query = Query.userQuery(req);
     User.findAndCountAll(query)
     .then((users) => {
-      users.pagination = Helpers.pagination(users, query);
-      delete users.count;
+      users = Helpers.pagination(users, query);
       Response.success(res, users);
     })
     .catch(err => Response.serverError(res, err.message));

@@ -24,8 +24,7 @@ export default class DocumentController extends Response {
     const query = Query.docQuery(req);
     Document.findAndCountAll(query)
       .then((data) => {
-        data.pagination = Helpers.pagination(data, query);
-        delete data.count;
+        data = Helpers.pagination(data, query);
         Response.success(res, data);
       })
       .catch(err => Response.serverError(res, err.message));

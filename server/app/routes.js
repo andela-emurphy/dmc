@@ -1,7 +1,7 @@
 import AuthController from './controllers/AuthController';
 import UserController from './controllers/UserController';
 import AuthMiddleware from '../middleware/Auth';
-import { userPermission, adminPermission, documentPermission }
+import { userPermission, adminPermission, documentPermission, rolePermission }
   from '../middleware/Permission';
 import DocumentController from '../app/controllers/DocumentController';
 import RoleController from '../app/controllers/RoleController';
@@ -31,10 +31,11 @@ export default (express, app) => {
     DocumentController.delete);
 
   // manage roles
-  Router.post('/roles', adminPermission, RoleController.create);
-  Router.get('/roles', adminPermission, RoleController.getAll);
-  Router.get('/roles/:title', userPermission, RoleController.get);
-  Router.get('/roles/title', userPermission,
+  Router.post('/roles', rolePermission, RoleController.create);
+  Router.get('/roles', rolePermission, RoleController.getAll);
+  Router.get('/roles/:title', rolePermission, RoleController.get);
+  Router.delete('/roles/:title', rolePermission, RoleController.delete);
+  Router.get('/roles/title', rolePermission,
     UserController.getUserDocuments);
 
   app.get('/', (req, res) => {

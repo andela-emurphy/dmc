@@ -125,7 +125,7 @@ describe('Authentication mock middleware', () => {
 
 
   describe('Authentication mock', () => {
-    it('should return 401 if Authorization header not found', (done) => {
+    it('should not call next if Authorization header not found', (done) => {
       const request = httpMocks.createRequest({
         method: 'GET',
         url: '/users'
@@ -143,7 +143,7 @@ describe('Authentication mock middleware', () => {
       Auth(request, response, spy);
     });
 
-    it('should return 401 if no Bearer is found', (done) => {
+    it('should not call next if no Bearer is found', (done) => {
       const request = httpMocks.createRequest({
         method: 'GET',
         url: '/users',
@@ -163,7 +163,7 @@ describe('Authentication mock middleware', () => {
       Auth(request, response, spy);
     });
 
-    it('should return 401 if token is invalid', (done) => {
+    it('should not call next if token is invalid', (done) => {
       const request = httpMocks.createRequest({
         method: 'GET',
         url: '/users',
@@ -183,7 +183,7 @@ describe('Authentication mock middleware', () => {
       Auth(request, response, spy);
     });
 
-    it('should return 401 for logged out token', (done) => {
+    it('should not call next for ogged out token', (done) => {
       const request = httpMocks.createRequest({
         method: 'GET',
         url: '/users',
