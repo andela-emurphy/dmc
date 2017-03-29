@@ -8,3 +8,6 @@ es5
 .DS_Store
 src
 .env
+README.md
+config/dbs.js
+dist
